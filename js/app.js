@@ -1,4 +1,3 @@
-
 (function () {
   'use strict';
 
@@ -43,7 +42,11 @@
   }
 
   function pad(n) {
-    return n < 10 ? '0' + n : String(n);
+    return String(n).padStart(2, '0');
+  }
+
+  function codeNumber(n) {
+    return 'CODE_' + String(n).padStart(3, '0');
   }
 
   function circ(n) {
@@ -103,7 +106,9 @@
     });
   }
 
-  /* ACCORDION FILE ARCHIVE */
+  /* ==========================================
+     CODE ARCHIVE — EDITORIAL FILE FOLDERS
+     ========================================== */
 
   function lib(list) {
     if (!list.length) {
@@ -112,8 +117,6 @@
 
     var groups = [];
     var groupMap = Object.create(null);
-
-    /* Group projects by category, preserving their original order. */
 
     list.forEach(function (x) {
       var p = x[0];
@@ -133,7 +136,9 @@
     });
 
     var sections = groups.map(function (group, index) {
-      var projects = group.projects.map(function (x, projectIndex) {
+      var code = codeNumber(index + 1);
+
+      var projects = group.projects.map(function (x) {
         var p = x[0];
         var i = x[1];
 
@@ -146,7 +151,7 @@
 
           '<span class="project-caption">' +
             '<span class="folder-project-number">' +
-              pad(i + 1) +
+              code + ' / ' + pad(i + 1) +
             '</span>' +
 
             '<span class="folder-project-name">' +
@@ -161,43 +166,33 @@
         '</a>';
       }).join('');
 
-      return '<details class="archive-folder"' +
+      return '<details class="archive-folder archive-folder-' +
+        ((index % 5) + 1) + '"' +
         (index === 0 ? ' open' : '') + '>' +
 
         '<summary class="archive-folder-tab">' +
 
           '<span class="folder-label">' +
-
-            '<span class="folder-number">' +
-              pad(index + 1) +
-            '</span>' +
-
-            '<span class="folder-name">' +
-              esc(group.name) +
-            '</span>' +
-
+            '<span class="folder-number">' + code + '</span>' +
+            '<span class="folder-name">' + esc(group.name) + '</span>' +
           '</span>' +
 
           '<span class="folder-count">' +
             pad(group.projects.length) +
           '</span>' +
 
-          '<span class="folder-icon" aria-hidden="true">' +
-            '+' +
-          '</span>' +
+          '<span class="folder-icon" aria-hidden="true">↗</span>' +
 
         '</summary>' +
 
         '<div class="folder-content">' +
 
           '<div class="folder-section-heading">' +
-            '<span>habibah / ' + esc(group.name) + '</span>' +
-            '<span>' + pad(group.projects.length) + ' projects</span>' +
+            '<span>HABIBAH / ' + esc(group.name) + '</span>' +
+            '<span>' + pad(group.projects.length) + ' PROJECTS</span>' +
           '</div>' +
 
-          '<div class="folder-projects">' +
-            projects +
-          '</div>' +
+          '<div class="folder-projects">' + projects + '</div>' +
 
         '</div>' +
 
@@ -209,8 +204,14 @@
       '<div class="archive-file-header">' +
 
         '<div class="archive-file-heading">' +
-          '<span class="archive-file-kicker">personal collection</span>' +
-          '<span class="archive-file-title-main">habibah / archive</span>' +
+          '<span class="archive-file-kicker">' +
+            'VISUAL INDEX / 2026' +
+          '</span>' +
+
+          '<span class="archive-file-title-main">' +
+            'habibah / archive' +
+          '</span>' +
+
           '<span class="archive-file-ar" lang="ar" dir="rtl">' +
             'مَلَفّ الأَعْمَال' +
           '</span>' +
@@ -218,7 +219,7 @@
 
         '<div class="archive-file-total">' +
           '<span>' + pad(list.length) + '</span>' +
-          '<span>projects</span>' +
+          '<span>PROJECTS</span>' +
         '</div>' +
 
       '</div>' +
@@ -228,14 +229,16 @@
       '</div>' +
 
       '<div class="archive-drawer-bottom">' +
-        '<span>visual archive / habibah</span>' +
-        '<span>' + pad(groups.length) + ' sections</span>' +
+        '<span>INDEPENDENT VISUAL ARCHIVE</span>' +
+        '<span>' + pad(groups.length) + ' FILES / INDEXED</span>' +
       '</div>' +
 
     '</div>';
   }
 
-  /* HOMEPAGE INTRO */
+  /* ==========================================
+     HOMEPAGE INTRO
+     ========================================== */
 
   function hero() {
     return '<section class="intro">' +
@@ -255,7 +258,9 @@
     '</section>';
   }
 
-  /* BILINGUAL LABELS */
+  /* ==========================================
+     BILINGUAL NAVIGATION LABELS
+     ========================================== */
 
   function tr(en, ar) {
     return '<span class="nav-label">' +
@@ -281,7 +286,9 @@
     '</div>';
   }
 
-  /* PAGES */
+  /* ==========================================
+     PAGES
+     ========================================== */
 
   var views = {
     home: function () {
@@ -363,7 +370,9 @@
     }
   };
 
-  /* PROJECT DETAILS */
+  /* ==========================================
+     PROJECT DETAILS
+     ========================================== */
 
   function project(id) {
     var match = String(id).match(/^(\d+)-/);
@@ -461,7 +470,9 @@
     '</div>';
   }
 
-  /* NAVIGATION */
+  /* ==========================================
+     ROUTING
+     ========================================== */
 
   function route() {
     var hash = location.hash.replace(/^#\/?/, '').split('/');
@@ -494,7 +505,9 @@
     });
   }
 
-  /* IMAGE VIEWER */
+  /* ==========================================
+     IMAGE VIEWER
+     ========================================== */
 
   function openImage(el) {
     var artwork = el.querySelector('.art');
@@ -547,7 +560,9 @@
     }
   });
 
-  /* LOAD CONTENT */
+  /* ==========================================
+     LOAD CONTENT
+     ========================================== */
 
   function load(url) {
     return fetch(url, { cache: 'no-cache' }).then(function (response) {
@@ -603,3 +618,4 @@
   });
 
 })();
+```
