@@ -1,3 +1,4 @@
+
 (function () {
   'use strict';
 
@@ -158,7 +159,7 @@
 
       '<div class="archive-drawer-label">' +
         '<span>habibah / archive</span>' +
-        '<span lang="ar" dir="rtl">الأرشيف</span>' +
+        '<span lang="ar" dir="rtl">الْأَرْشِيف</span>' +
       '</div>' +
 
       '<div class="archive-files">' +
@@ -182,7 +183,7 @@
         '<h1 lang="ar" dir="rtl">حبيبه</h1>' +
         '<p class="intro-title">visual creative</p>' +
         '<span class="translation" lang="ar" dir="rtl">' +
-          'مبدعة بصرية' +
+          'مُبْدِعَةٌ بَصَرِيَّةٌ' +
         '</span>' +
       '</div>' +
 
@@ -210,7 +211,7 @@
       '<div>' +
         '<h2>the archive</h2>' +
         '<span class="translation" lang="ar" dir="rtl">' +
-          'الأرشيف' +
+          'الْأَرْشِيف' +
         '</span>' +
       '</div>' +
 
@@ -231,7 +232,7 @@
 
           '<p class="archive-more">' +
             '<a href="#/work">' +
-              tr('view all work', 'عرض كل الأعمال') +
+              tr('view all work', 'عَرْضُ كُلِّ الْأَعْمَالِ') +
             '</a>' +
           '</p>' +
 
@@ -266,7 +267,7 @@
         '<h1>about</h1>' +
 
         '<span class="translation" lang="ar" dir="rtl">' +
-          'من أنا' +
+          'مَنْ أَنَا' +
         '</span>' +
 
         '<div class="txt">' + paras(S.about) + '</div>' +
@@ -291,7 +292,7 @@
         '<div>' +
           '<h1>contact</h1>' +
           '<span class="translation" lang="ar" dir="rtl">' +
-            'تواصل' +
+            'تَوَاصُل' +
           '</span>' +
         '</div>' +
 
@@ -352,7 +353,7 @@
         '<a href="#/work">back to work</a>' +
 
         '<span class="translation" lang="ar" dir="rtl">' +
-          'العودة إلى الأعمال' +
+          'الْعَوْدَةُ إِلَى الْأَعْمَالِ' +
         '</span>' +
 
         '<h1>' + esc(p.title) + '</h1>' +
@@ -368,7 +369,7 @@
         '<h3>details</h3>' +
 
         '<span class="translation" lang="ar" dir="rtl">' +
-          'التفاصيل' +
+          'التَّفَاصِيل' +
         '</span>' +
 
         '<p class="meta">' +
@@ -381,7 +382,7 @@
         (p.role
           ? '<h3>my role</h3>' +
             '<span class="translation" lang="ar" dir="rtl">' +
-              'دوري' +
+              'دَوْرِي' +
             '</span>' +
             '<p>' + esc(p.role) + '</p>'
           : '') +
@@ -389,7 +390,7 @@
         (p.process
           ? '<h3>process</h3>' +
             '<span class="translation" lang="ar" dir="rtl">' +
-              'مراحل العمل' +
+              'مَرَاحِلُ الْعَمَلِ' +
             '</span>' +
             paras(p.process)
           : '') +
@@ -512,19 +513,19 @@
         '<div class="big">habibah</div>' +
 
         '<a href="#/">' +
-          tr('home', 'الرئيسية') +
+          tr('home', 'الرَّئِيسِيَّة') +
         '</a>' +
 
         '<a href="#/work">' +
-          tr('work', 'الأعمال') +
+          tr('work', 'الْأَعْمَال') +
         '</a>' +
 
         '<a href="#/about">' +
-          tr('about', 'من أنا') +
+          tr('about', 'مَنْ أَنَا') +
         '</a>' +
 
         '<a href="#/contact">' +
-          tr('contact', 'تواصل') +
+          tr('contact', 'تَوَاصُل') +
         '</a>' +
 
       '</div>';
