@@ -1,4 +1,3 @@
-
 /* TEMPORARY ARCHIVE LAYOUT FIX */
 
 .archive-ring-shell {
