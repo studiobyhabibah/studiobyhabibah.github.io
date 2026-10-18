@@ -68,7 +68,11 @@
   }
 
   function projectImages(project) {
-    var images = project.images || project.gallery || project.artworks || [];
+    var images =
+      project.images ||
+      project.gallery ||
+      project.artworks ||
+      [];
 
     if (!Array.isArray(images)) {
       images = [];
@@ -95,8 +99,8 @@
     var entry = projectImages(project)[index];
 
     return entry && typeof entry === 'object'
-      ? entry.caption || entry.alt || project.title || 'artwork'
-      : project.title || 'artwork';
+      ? (entry.caption || entry.alt || project.title || 'artwork')
+      : (project.title || 'artwork');
   }
 
   function placeholder(label) {
@@ -175,22 +179,21 @@
       '<span class="archive-file-title-main">habibah / archive</span>' +
       '<span class="archive-file-ar" lang="ar" dir="rtl">أَرْشِيفُ الْأَعْمَالِ</span>' +
       '</div>' +
-      '<div class="archive-file-total">' +
-      '<span>' + pad(list.length) + '</span>' +
-      '<span>projects</span>' +
+      '<div class="archive-file-total"><span>' +
+      pad(list.length) +
+      '</span><span>projects</span></div>' +
       '</div>' +
-      '</div>' +
-      '<div class="ring-scene" aria-label="move your mouse or swipe to rotate the 3D project archive">' +
-      '<div class="ring-stage">' +
-      '<div class="archive-ring">' + cards + '</div>' +
-      '</div>' +
-      '<div class="ring-instructions"><span>move your mouse to explore</span></div>' +
-      '</div>' +
+      '<div class="ring-scene" aria-label="drag or scroll to rotate the 3D project archive">' +
+      '<div class="ring-stage"><div class="archive-ring">' +
+      cards +
+      '</div></div>' +
+      '<div class="ring-instructions">' +
+      '<span>drag to explore</span><span>scroll / swipe ↔</span>' +
+      '</div></div>' +
       '<div class="archive-drawer-bottom">' +
       '<span>independent visual archive</span>' +
       '<span>3d / project index</span>' +
-      '</div>' +
-      '</section>';
+      '</div></section>';
   }
 
   function hero() {
@@ -202,8 +205,7 @@
       '</div>' +
       '<p class="intro-description">' +
       esc(plain(S.intro || S.description || 'exploring design, characters, stories, and visual culture.')) +
-      '</p>' +
-      '</section>';
+      '</p></section>';
   }
 
   function categories() {
@@ -240,17 +242,23 @@
           '">all work</button>';
 
         buttons += categories().map(function (c) {
-          return '<button type="button" data-filter="' + esc(c) +
+          return '<button type="button" data-filter="' +
+            esc(c) +
             '" aria-pressed="' +
             (currentFilter.toLowerCase() === c.toLowerCase() ? 'true' : 'false') +
-            '">' + esc(c) + '</button>';
+            '">' +
+            esc(c) +
+            '</button>';
         }).join('');
 
         return '<section class="archive-section work-page">' +
           archiveHeading() +
-          '<div class="filters" aria-label="filter projects">' + buttons + '</div>' +
-          '<div id="project-ring-results">' + lib(items(currentFilter)) + '</div>' +
-          '</section>';
+          '<div class="filters" aria-label="filter projects">' +
+          buttons +
+          '</div>' +
+          '<div id="project-ring-results">' +
+          lib(items(currentFilter)) +
+          '</div></section>';
       },
 
       about: function () {
@@ -281,14 +289,22 @@
             if (typeof link === 'string') {
               return '<a href="' + esc(link) +
                 '" target="_blank" rel="noreferrer">' +
-                esc(link.replace(/^https?:\/\//, '')) + ' ↗</a>';
+                esc(link.replace(/^https?:\/\//, '')) +
+                ' ↗</a>';
             }
 
-            var label = link.label || link.name || link.title || link.url || link.href || 'link';
-            var href = link.url || link.href || (link.email ? 'mailto:' + link.email : '#');
+            var label =
+              link.label || link.name || link.title ||
+              link.url || link.href || 'link';
+
+            var href =
+              link.url || link.href ||
+              (link.email ? 'mailto:' + link.email : '#');
 
             return '<a href="' + esc(href) + '"' +
-              (/^https?:/.test(href) ? ' target="_blank" rel="noreferrer"' : '') +
+              (/^https?:/.test(href)
+                ? ' target="_blank" rel="noreferrer"'
+                : '') +
               '>' + esc(label) + ' ↗</a>';
           }).join('');
         }
@@ -321,8 +337,10 @@
     var found = findProject(id);
 
     if (!found) {
-      return '<section class="about"><h1>project not found</h1>' +
-        '<a href="#/work">← back to work</a></section>';
+      return '<section class="about">' +
+        '<h1>project not found</h1>' +
+        '<a href="#/work">← back to work</a>' +
+        '</section>';
     }
 
     var p = found[0];
@@ -331,17 +349,22 @@
     var title = p.title || p.name || 'untitled project';
 
     var gallery = images.map(function (image, n) {
-      return '<button class="sq" type="button" data-lightbox-index="' + n +
-        '" aria-label="view image ' + (n + 1) + '">' +
+      return '<button class="sq" type="button" data-lightbox-index="' +
+        n +
+        '" aria-label="view image ' +
+        (n + 1) +
+        '">' +
         '<span class="num">' + pad(n + 1) + '</span>' +
         '<span class="art">' + art(p, n) + '</span>' +
         '</button>';
     }).join('');
 
-    var aside = '<aside><a href="#/work">← back to archive</a>' +
+    var aside = '<aside>' +
+      '<a href="#/work">← back to archive</a>' +
       '<span class="translation" lang="ar" dir="rtl">أَرْشِيفُ الْأَعْمَالِ</span>' +
-      '<p class="project-code">' + esc(codeNumber(i + 1)) +
-      ' / ' + esc(p.category || 'project') + '</p>' +
+      '<p class="project-code">' +
+      esc(codeNumber(i + 1)) + ' / ' + esc(p.category || 'project') +
+      '</p>' +
       '<h1>' + esc(title) + '</h1>' +
       '<div class="it">' +
       paragraphs(p.description || p.about || p.text || p.summary || '') +
@@ -351,19 +374,26 @@
 
     ['year', 'client', 'role', 'tools', 'medium'].forEach(function (key) {
       if (p[key]) {
-        meta.push('<li><span>' + esc(key) + '</span><span>' +
+        meta.push(
+          '<li><span>' + esc(key) + '</span><span>' +
           esc(Array.isArray(p[key]) ? p[key].join(', ') : p[key]) +
-          '</span></li>');
+          '</span></li>'
+        );
       }
     });
 
     if (meta.length) {
-      aside += '<h3>project notes</h3><ul class="cl">' + meta.join('') + '</ul>';
+      aside += '<h3>project notes</h3><ul class="cl">' +
+        meta.join('') +
+        '</ul>';
     }
 
-    return '<section class="pj"><div class="sqs">' +
+    return '<section class="pj">' +
+      '<div class="sqs">' +
       (gallery || '<div class="sq"><span class="art">' + art(p, 0) + '</span></div>') +
-      '</div>' + aside + '</aside></section>';
+      '</div>' +
+      aside +
+      '</aside></section>';
   }
 
   function renderFooter() {
@@ -376,21 +406,9 @@
       '</div>';
   }
 
-  /* =========================================
-     3D ARCHIVE RING
-     Mouse movement rotates the ring.
-     Touch swipe works on mobile.
-     ========================================= */
-
   function setupArchiveRing() {
     if (ringCleanup) {
       ringCleanup();
-      ringCleanup = null;
-    }
-
-    if (ringFrame) {
-      cancelAnimationFrame(ringFrame);
-      ringFrame = 0;
     }
 
     var scene = document.querySelector('.ring-scene');
@@ -399,6 +417,12 @@
     if (!scene || !ring) {
       return;
     }
+
+    if (ringFrame) {
+      cancelAnimationFrame(ringFrame);
+    }
+
+    ringFrame = 0;
 
     var cards = Array.prototype.slice.call(ring.children);
     var count = cards.length;
@@ -409,24 +433,15 @@
 
     var rotation = 0;
     var target = 0;
-    var velocity = 0;
-    var lastMouseX = null;
     var dragging = false;
     var moved = false;
     var startX = 0;
     var lastX = 0;
     var pointerId = null;
     var suppressClick = false;
-    var suppressTimer = null;
-    var destroyed = false;
 
     var reduced = window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
-    function render() {
-      ring.style.transform =
-        'rotateX(-7deg) rotateY(' + rotation + 'deg)';
-    }
 
     function arrange() {
       var mobile = window.innerWidth <= 560;
@@ -438,154 +453,94 @@
           ? width * 0.9
           : Math.max(
               mobile ? 210 : 255,
-              Math.min(
-                520,
-                width / (2 * Math.tan(Math.PI / count))
-              )
+              Math.min(520, width / (2 * Math.tan(Math.PI / count)))
             );
 
-      cards.forEach(function (card, index) {
+      cards.forEach(function (card, i) {
         card.style.transform =
           'translate(-50%, -50%) rotateY(' +
-          (index * 360 / count) +
-          'deg) translateZ(' + radius + 'px)';
+          (i * 360 / count) +
+          'deg) translateZ(' +
+          radius +
+          'px)';
       });
 
-      render();
+      ring.style.transform =
+        'rotateX(-7deg) rotateY(' + rotation + 'deg)';
     }
 
     function tick() {
-      ringFrame = 0;
+      rotation += (target - rotation) * 0.085;
 
-      if (destroyed) {
-        return;
-      }
-
-      if (reduced) {
+      if (Math.abs(target - rotation) < 0.02) {
         rotation = target;
-        velocity = 0;
-        render();
-        return;
       }
 
-      var difference = target - rotation;
+      ring.style.transform =
+        'rotateX(-7deg) rotateY(' + rotation + 'deg)';
 
-      velocity += difference * 0.075;
-      velocity *= 0.78;
-      rotation += velocity;
-
-      if (
-        Math.abs(difference) < 0.025 &&
-        Math.abs(velocity) < 0.025
-      ) {
-        rotation = target;
-        velocity = 0;
-        render();
-        return;
+      if (Math.abs(target - rotation) >= 0.02) {
+        ringFrame = requestAnimationFrame(tick);
+      } else {
+        ringFrame = 0;
       }
-
-      render();
-      ringFrame = requestAnimationFrame(tick);
     }
 
     function animate() {
-      if (destroyed) {
-        return;
-      }
-
       if (reduced) {
         rotation = target;
-        velocity = 0;
-        render();
+        ring.style.transform =
+          'rotateX(-7deg) rotateY(' + rotation + 'deg)';
       } else if (!ringFrame) {
         ringFrame = requestAnimationFrame(tick);
       }
     }
 
-    /* Desktop: move the mouse horizontally over the archive. */
-    function onMouseMove(event) {
-      if (
-        event.pointerType === 'touch' ||
-        dragging ||
-        window.innerWidth <= 560
-      ) {
-        return;
-      }
-
-      if (lastMouseX === null) {
-        lastMouseX = event.clientX;
-        return;
-      }
-
-      var delta = event.clientX - lastMouseX;
-      lastMouseX = event.clientX;
-
-      if (Math.abs(delta) > 90 || delta === 0) {
-        return;
-      }
-
-      target += delta * 0.42;
+    function wheel(e) {
+      target += (e.deltaY + e.deltaX) * 0.15;
       animate();
     }
 
-    function onMouseLeave() {
-      lastMouseX = null;
-    }
-
-    /* Mobile: swipe left or right to rotate the archive. */
-    function onPointerDown(event) {
-      if (event.pointerType === 'mouse') {
-        return;
-      }
-
-      if (event.button !== undefined && event.button !== 0) {
+    function down(e) {
+      if (e.pointerType === 'mouse' && e.button !== 0) {
         return;
       }
 
       dragging = true;
       moved = false;
-      startX = lastX = event.clientX;
-      pointerId = event.pointerId;
+      startX = lastX = e.clientX;
+      pointerId = e.pointerId;
 
       scene.classList.add('is-dragging');
 
       if (scene.setPointerCapture) {
         try {
           scene.setPointerCapture(pointerId);
-        } catch (error) {
-          /* Pointer capture is optional. */
-        }
+        } catch (err) {}
       }
     }
 
-    function onTouchMove(event) {
-      if (
-        event.pointerType === 'mouse' ||
-        !dragging ||
-        event.pointerId !== pointerId
-      ) {
+    function move(e) {
+      if (!dragging || e.pointerId !== pointerId) {
         return;
       }
 
-      var delta = event.clientX - lastX;
+      var dx = e.clientX - lastX;
 
-      if (Math.abs(event.clientX - startX) > 6) {
+      if (Math.abs(e.clientX - startX) > 5) {
         moved = true;
       }
 
       if (moved) {
-        target += delta * 0.5;
+        target += dx * 0.45;
         animate();
       }
 
-      lastX = event.clientX;
+      lastX = e.clientX;
     }
 
-    function onPointerUp(event) {
-      if (
-        !dragging ||
-        (event.pointerId != null && event.pointerId !== pointerId)
-      ) {
+    function up(e) {
+      if (!dragging || (e.pointerId != null && e.pointerId !== pointerId)) {
         return;
       }
 
@@ -595,68 +550,45 @@
       if (moved) {
         suppressClick = true;
 
-        if (suppressTimer) {
-          window.clearTimeout(suppressTimer);
-        }
-
-        suppressTimer = window.setTimeout(function () {
+        window.setTimeout(function () {
           suppressClick = false;
-          suppressTimer = null;
         }, 250);
       }
 
       pointerId = null;
-      lastMouseX = null;
     }
 
-    function onClick(event) {
-      if (!suppressClick) {
-        return;
-      }
-
-      event.preventDefault();
-      event.stopPropagation();
-      suppressClick = false;
-
-      if (suppressTimer) {
-        window.clearTimeout(suppressTimer);
-        suppressTimer = null;
+    function click(e) {
+      if (suppressClick) {
+        e.preventDefault();
+        e.stopPropagation();
+        suppressClick = false;
       }
     }
 
-    function onResize() {
-      lastMouseX = null;
+    function resize() {
       arrange();
     }
 
-    scene.addEventListener('pointermove', onMouseMove);
-    scene.addEventListener('pointerleave', onMouseLeave);
-    scene.addEventListener('pointerdown', onPointerDown);
-    scene.addEventListener('pointermove', onTouchMove);
-    scene.addEventListener('pointerup', onPointerUp);
-    scene.addEventListener('pointercancel', onPointerUp);
-    scene.addEventListener('click', onClick, true);
+    scene.addEventListener('wheel', wheel, { passive: true });
+    scene.addEventListener('pointerdown', down);
+    scene.addEventListener('pointermove', move);
+    scene.addEventListener('pointerup', up);
+    scene.addEventListener('pointercancel', up);
+    scene.addEventListener('click', click, true);
 
-    window.addEventListener('resize', onResize, { passive: true });
+    window.addEventListener('resize', resize, { passive: true });
 
     arrange();
 
     ringCleanup = function () {
-      destroyed = true;
-
-      scene.removeEventListener('pointermove', onMouseMove);
-      scene.removeEventListener('pointerleave', onMouseLeave);
-      scene.removeEventListener('pointerdown', onPointerDown);
-      scene.removeEventListener('pointermove', onTouchMove);
-      scene.removeEventListener('pointerup', onPointerUp);
-      scene.removeEventListener('pointercancel', onPointerUp);
-      scene.removeEventListener('click', onClick, true);
-
-      window.removeEventListener('resize', onResize);
-
-      if (suppressTimer) {
-        window.clearTimeout(suppressTimer);
-      }
+      scene.removeEventListener('wheel', wheel);
+      scene.removeEventListener('pointerdown', down);
+      scene.removeEventListener('pointermove', move);
+      scene.removeEventListener('pointerup', up);
+      scene.removeEventListener('pointercancel', up);
+      scene.removeEventListener('click', click, true);
+      window.removeEventListener('resize', resize);
 
       if (ringFrame) {
         cancelAnimationFrame(ringFrame);
@@ -665,10 +597,6 @@
       ringFrame = 0;
     };
   }
-
-  /* =========================================
-     ROUTING
-     ========================================= */
 
   function route() {
     var parts = window.location.hash
@@ -713,6 +641,7 @@
       setupArchiveRing();
     }
 
+    app.setAttribute('aria-busy', 'false');
     document.title = title;
 
     document.querySelectorAll('.main-nav a').forEach(function (link) {
@@ -729,10 +658,6 @@
 
     window.scrollTo(0, 0);
   }
-
-  /* =========================================
-     FILTERS AND PROJECT LIGHTBOX
-     ========================================= */
 
   document.addEventListener('click', function (event) {
     var filter = event.target.closest('[data-filter]');
@@ -804,23 +729,19 @@
 
   document.getElementById('lbx').addEventListener('click', closeImage);
 
-  lb.addEventListener('click', function (event) {
-    if (event.target === lb) {
+  lb.addEventListener('click', function (e) {
+    if (e.target === lb) {
       closeImage();
     }
   });
 
-  /* =========================================
-     LOAD SITE CONTENT
-     ========================================= */
-
   function loadJSON(url) {
-    return fetch(url, { cache: 'no-cache' }).then(function (response) {
-      if (!response.ok) {
+    return fetch(url, { cache: 'no-cache' }).then(function (r) {
+      if (!r.ok) {
         throw new Error('Could not load ' + url);
       }
 
-      return response.json();
+      return r.json();
     });
   }
 
@@ -851,6 +772,7 @@
       '<p>please check data/site.json and data/projects.json.</p>' +
       '</section>';
 
+    app.setAttribute('aria-busy', 'false');
     renderFooter();
   });
 
