@@ -279,7 +279,7 @@
   }
 
   /* ======================================
-     RING INTERACTION
+     SMOOTH 3D RING INTERACTION
      ====================================== */
 
   function setupRing() {
@@ -301,53 +301,112 @@
     if (!stage || !track || !cards.length) return;
 
     var angle = 0;
-    var startX = 0;
-    var startY = 0;
-    var dragStartAngle = 0;
+    var step = 360 / cards.length;
+    var radius = 0;
+
     var dragging = false;
     var moved = false;
+    var startX = 0;
+    var startY = 0;
     var lastX = 0;
-    var radius = 0;
-    var step = 360 / cards.length;
-    var wheelTimer = null;
+    var lastTime = 0;
+    var dragStartAngle = 0;
+    var velocity = 0;
+
+    var raf = 0;
+    var wheelTimer = 0;
+    var resizeObserver = null;
+
+    var friction = 0.94;
+    var minVelocity = 0.015;
+    var dragSensitivity = 0.42;
+
+    function stopAnimation() {
+      if (raf) {
+        cancelAnimationFrame(raf);
+        raf = 0;
+      }
+    }
+
+    function render() {
+      track.style.transform =
+        'translateZ(0) rotateY(' + angle + 'deg)';
+
+      var active = Math.round(-angle / step);
+      active = ((active % cards.length) + cards.length) %
+        cards.length;
+
+      if (counter) {
+        counter.textContent =
+          pad(active + 1) + ' / ' + pad(cards.length);
+      }
+
+      cards.forEach(function (card, i) {
+        var cardAngle = i * step + angle;
+        var distance = Math.abs(
+          ((cardAngle % 360) + 540) % 360 - 180
+        );
+
+        card.classList.toggle(
+          'is-front',
+          distance < step * 0.55
+        );
+      });
+    }
 
     function measure() {
       var width = stage.clientWidth;
-      radius = Math.max(150, Math.min(width * 0.48, 430));
 
       if (window.innerWidth < 600) {
         radius = Math.max(115, Math.min(width * 0.54, 230));
+      } else {
+        radius = Math.max(150, Math.min(width * 0.48, 430));
       }
 
       cards.forEach(function (card, i) {
         card.style.transform =
-          'translate(-50%, -50%) rotateY(' + (i * step) +
-          'deg) translateZ(' + radius + 'px)';
+          'translate(-50%, -50%) rotateY(' +
+          (i * step) + 'deg) translateZ(' + radius + 'px)';
       });
 
       render();
     }
 
-    function render() {
-      track.style.transform = 'rotateY(' + angle + 'deg)';
-
-      var active = Math.round(-angle / step);
-      active = ((active % cards.length) + cards.length) % cards.length;
-
-      if (counter) {
-        counter.textContent = pad(active + 1) + ' / ' + pad(cards.length);
+    function animate() {
+      if (dragging) {
+        raf = 0;
+        return;
       }
 
-      cards.forEach(function (card, i) {
-        var distance = Math.abs(
-          ((((i * step + angle) % 360) + 540) % 360) - 180
-        );
+      angle += velocity;
+      velocity *= friction;
 
-        card.classList.toggle('is-front', distance < step * 0.55);
-      });
+      render();
+
+      if (Math.abs(velocity) > minVelocity) {
+        raf = requestAnimationFrame(animate);
+      } else {
+        velocity = 0;
+        raf = 0;
+        render();
+      }
+    }
+
+    function startInertia() {
+      stopAnimation();
+
+      if (Math.abs(velocity) <= minVelocity) {
+        velocity = 0;
+        render();
+        return;
+      }
+
+      raf = requestAnimationFrame(animate);
     }
 
     function rotate(direction) {
+      stopAnimation();
+      velocity = 0;
       angle -= direction * step;
       render();
     }
@@ -355,11 +414,20 @@
     function pointerDown(event) {
       if (event.target.closest('button')) return;
 
+      if (event.pointerType === 'mouse' && event.button !== 0) {
+        return;
+      }
+
+      stopAnimation();
+
       dragging = true;
       moved = false;
+      velocity = 0;
+
       startX = event.clientX;
       startY = event.clientY;
       lastX = event.clientX;
+      lastTime = event.timeStamp;
       dragStartAngle = angle;
 
       ring.classList.add('is-dragging');
@@ -381,8 +449,20 @@
         moved = true;
       }
 
-      angle = dragStartAngle + dx * 0.42;
+      var now = event.timeStamp;
+      var deltaX = event.clientX - lastX;
+      var deltaTime = Math.max(1, now - lastTime);
+
+      var instantVelocity =
+        deltaX * dragSensitivity / deltaTime * 16.67;
+
+      velocity = velocity * 0.35 + instantVelocity * 0.65;
+
+      angle = dragStartAngle + dx * dragSensitivity;
+
       lastX = event.clientX;
+      lastTime = now;
+
       render();
     }
 
@@ -394,21 +474,35 @@
 
       if (moved) {
         ring.dataset.justDragged = 'true';
+
         window.setTimeout(function () {
           delete ring.dataset.justDragged;
-        }, 180);
+        }, 250);
       }
+
+      startInertia();
     }
 
     function wheel(event) {
-      if (Math.abs(event.deltaY) < 2) return;
-      angle -= Math.sign(event.deltaY) * 3.5;
-      render();
+      if (Math.abs(event.deltaY) < 2 &&
+          Math.abs(event.deltaX) < 2) {
+        return;
+      }
+
+      stopAnimation();
+
+      var delta = Math.abs(event.deltaX) > Math.abs(event.deltaY)
+        ? event.deltaX
+        : event.deltaY;
+
+      velocity += -delta * 0.025;
+      velocity = Math.max(-8, Math.min(8, velocity));
 
       window.clearTimeout(wheelTimer);
+
       wheelTimer = window.setTimeout(function () {
-        render();
-      }, 80);
+        startInertia();
+      }, 90);
     }
 
     function keydown(event) {
@@ -431,8 +525,13 @@
     var prev = ring.querySelector('[data-ring-prev]');
     var next = ring.querySelector('[data-ring-next]');
 
-    function onPrev() { rotate(-1); }
-    function onNext() { rotate(1); }
+    function onPrev() {
+      rotate(-1);
+    }
+
+    function onNext() {
+      rotate(1);
+    }
 
     ring.addEventListener('pointerdown', pointerDown);
     ring.addEventListener('pointermove', pointerMove);
@@ -445,16 +544,21 @@
     if (prev) prev.addEventListener('click', onPrev);
     if (next) next.addEventListener('click', onNext);
 
-    var resizeObserver = typeof ResizeObserver !== 'undefined'
+    resizeObserver = typeof ResizeObserver !== 'undefined'
       ? new ResizeObserver(measure)
       : null;
 
-    if (resizeObserver) resizeObserver.observe(stage);
-    else window.addEventListener('resize', measure);
+    if (resizeObserver) {
+      resizeObserver.observe(stage);
+    } else {
+      window.addEventListener('resize', measure);
+    }
 
     measure();
 
     ringCleanup = function () {
+      stopAnimation();
+
       ring.removeEventListener('pointerdown', pointerDown);
       ring.removeEventListener('pointermove', pointerMove);
       ring.removeEventListener('pointerup', pointerUp);
@@ -466,8 +570,11 @@
       if (prev) prev.removeEventListener('click', onPrev);
       if (next) next.removeEventListener('click', onNext);
 
-      if (resizeObserver) resizeObserver.disconnect();
-      else window.removeEventListener('resize', measure);
+      if (resizeObserver) {
+        resizeObserver.disconnect();
+      } else {
+        window.removeEventListener('resize', measure);
+      }
 
       window.clearTimeout(wheelTimer);
     };
@@ -595,12 +702,14 @@
         if (!response.ok) {
           throw new Error(url + ' returned HTTP ' + response.status);
         }
+
         return response.json();
       })
       .catch(function (error) {
         if (error.name === 'AbortError') {
           throw new Error('Loading timed out: ' + url);
         }
+
         throw error;
       })
       .finally(function () {
@@ -649,6 +758,7 @@
     }).catch(function (error) {
       started = false;
       console.error('Portfolio loading failed:', error);
+
       showError(
         'Portfolio data could not load. Check the data/site.json and ' +
         'data/projects.json files. Details: ' + error.message
