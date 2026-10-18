@@ -1,9 +1,9 @@
 backend:
   name: github
-repo: studiobyhabibah/studiobyhabibah.github.io  branch: main
-media_folder: images/uploads
-public_folder: images/uploads
-collections:
+  repo: studiobyhabibah/studiobyhabibah.github.io
+  branch: main
+  media_folder: images/uploads
+  public_folder: images/uploads
   - name: portfolio
     label: Portfolio
     files:
