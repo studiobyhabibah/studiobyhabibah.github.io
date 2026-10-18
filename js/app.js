@@ -100,41 +100,63 @@
     }
 
     return '<div class="archive-drawer">' +
+
+      '<div class="archive-drawer-label">' +
+        '<span>habibah / archive</span>' +
+        '<span lang="ar" dir="rtl">الأَرْشِيف</span>' +
+      '</div>' +
+
       '<div class="archive-files">' +
-      l.map(function (x) {
-        var p = x[0];
-        var i = x[1];
 
-        return '<a class="archive-file" href="#/work/' +
-          pid(p, i) + '" aria-label="' + esc(p.title) + '">' +
+        l.map(function (x, index) {
+          var p = x[0];
+          var i = x[1];
+          var angle = [-2, 1.5, -1, 2, -1.5, 1][index % 6];
+          var tabWidth = [48, 58, 44, 63, 52, 40][index % 6];
 
-          '<span class="archive-file-tab">' +
-            '<span class="archive-file-title">' +
-              esc(p.title) +
-            '</span>' +
-            '<span class="translation" lang="ar" dir="rtl">' +
-              'مَشْرُوع' +
-            '</span>' +
-          '</span>' +
+          return '<a class="archive-file" href="#/work/' +
+            pid(p, i) + '" style="--file-angle:' + angle +
+            'deg;--tab-width:' + tabWidth + '%;--file-index:' +
+            index + '" aria-label="' + esc(p.title) + '">' +
 
-          '<span class="archive-file-body">' +
-            '<span class="archive-file-preview">' +
-              art(p, i, 0) +
-            '</span>' +
-
-            '<span>' +
+            '<span class="archive-file-tab">' +
               '<span class="archive-file-title">' +
                 esc(p.title) +
               '</span>' +
-              '<span class="archive-file-meta">' +
-                esc(p.category) +
-              '</span>' +
             '</span>' +
-          '</span>' +
 
-        '</a>';
-      }).join('') +
+            '<span class="archive-file-body">' +
+
+              '<span class="archive-file-number">' +
+                pad(i + 1) +
+              '</span>' +
+
+              '<span class="archive-file-preview">' +
+                art(p, i, 0) +
+              '</span>' +
+
+              '<span class="archive-file-info">' +
+                '<span class="archive-file-title">' +
+                  esc(p.title) +
+                '</span>' +
+                '<span class="archive-file-meta">' +
+                  esc(p.category) +
+                '</span>' +
+              '</span>' +
+
+              '<span class="archive-file-arrow">↗</span>' +
+
+            '</span>' +
+          '</a>';
+        }).join('') +
+
       '</div>' +
+
+      '<div class="archive-drawer-bottom">' +
+        '<span>personal collection</span>' +
+        '<span>' + pad(l.length) + ' files</span>' +
+      '</div>' +
+
     '</div>';
   }
 
@@ -172,6 +194,8 @@
       '</div>';
   }
 
+  /* pages */
+
   var views = {
     home: function () {
       return hero() +
@@ -187,6 +211,7 @@
     work: function () {
       return '<section class="archive-section">' +
         archiveHeading() +
+
         '<div class="filters" role="group" aria-label="Filter by category">' +
           ['All'].concat(S.categories || []).map(function (c) {
             return '<button type="button" aria-pressed="' +
@@ -195,6 +220,7 @@
             '</button>';
           }).join('') +
         '</div>' +
+
         '<div id="g">' + lib(items()) + '</div>' +
       '</section>';
     },
@@ -262,29 +288,37 @@
 
     return '<div class="pj">' +
       '<div class="sqs">' + sq + '</div>' +
+
       '<aside>' +
         '<a href="#/work">back to work</a>' +
         '<span class="translation" lang="ar" dir="rtl">' +
           'العَوْدَةُ إِلَى الأَعْمَال' +
         '</span>' +
+
         '<h1>' + esc(p.title) + '</h1>' +
         '<hr>' +
         '<p class="it">' + esc(d[0]) + '</p>' +
+
         (cl ? '<ul class="cl">' + cl + '</ul>' : '') +
+
         '<h3>details</h3>' +
         '<span class="translation" lang="ar" dir="rtl">' +
           'التَّفَاصِيل' +
         '</span>' +
+
         '<p class="meta">' + esc(p.category) +
           (p.year ? ', ' + esc(p.year) : '') +
         '</p>' +
+
         paras(d.slice(1).join('\n\n')) +
+
         (p.role
           ? '<h3>my role</h3>' +
             '<span class="translation" lang="ar" dir="rtl">' +
               'دَوْرِي' +
             '</span><p>' + esc(p.role) + '</p>'
           : '') +
+
         (p.process
           ? '<h3>process</h3>' +
             '<span class="translation" lang="ar" dir="rtl">' +
@@ -395,7 +429,8 @@
 
     window.addEventListener('hashchange', route);
     route();
-  }).catch(function () {
+  }).catch(function (err) {
+    console.error(err);
     app.innerHTML =
       '<p class="txt">The portfolio data could not load. ' +
       'Please open the published website and try again.</p>';
