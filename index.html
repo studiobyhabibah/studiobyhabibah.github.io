@@ -4,95 +4,52 @@
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
 
-  <title>Habibah — Visual Creative</title>
-  <meta
-    name="description"
-    content="Habibah — visual creative exploring design, characters, stories, and visual culture."
-  >
+  <title>habibah — visual creative</title>
+  <meta name="description" content="habibah — visual creative exploring design, characters, stories, and visual culture.">
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 
-  <link
-    href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Great+Vibes&family=Libre+Baskerville:wght@400;700&display=swap"
-    rel="stylesheet"
-  >
+  <link href="https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Libre+Baskerville:wght@400;700&display=swap" rel="stylesheet">
 
   <link rel="stylesheet" href="css/style.css">
 </head>
 
 <body>
+  <a class="skip" href="#app">skip to content</a>
 
-  <a class="skip" href="#app">Skip to content</a>
-
-  <!-- HEADER -->
   <header class="site-header">
+    <a class="logo" href="#/" aria-label="habibah home">habibah</a>
 
-    <a class="logo" href="#/" aria-label="Habibah home">
-      Habibah
-    </a>
+    <nav class="main-nav" aria-label="main navigation">
+      <a href="#/work">
+        <span>work</span>
+        <small lang="ar" dir="rtl">الأَعْمَال</small>
+      </a>
 
-    <nav class="main-nav" aria-label="Main navigation">
-      <a href="#/work">𝒲𝑜𝓇𝓀</a>
-      <a href="#/about">𝒜𝒷𝑜𝓊𝓉</a>
-      <a href="#/contact">𝒞𝑜𝓃𝓉𝒶𝒸𝓉</a>
+      <a href="#/about">
+        <span>about</span>
+        <small lang="ar" dir="rtl">مَنْ أَنَا</small>
+      </a>
+
+      <a href="#/contact">
+        <span>contact</span>
+        <small lang="ar" dir="rtl">تَوَاصُل</small>
+      </a>
     </nav>
-
   </header>
 
-  <!-- MAIN CONTENT -->
   <main id="app" tabindex="-1">
-
-    <!-- HOMEPAGE INTRO -->
-    <section class="intro" aria-label="Introduction">
-
-      <div class="intro-name">
-        <h1 lang="ar" dir="rtl">حَبِيبَه</h1>
-        <span class="intro-title">visual creative</span>
-      </div>
-
-      <p class="intro-description">
-        design · characters · stories · visual culture
-      </p>
-
-    </section>
-
-    <!-- ARCHIVE -->
-    <section class="archive-section" id="archive">
-
-      <div class="archive-heading">
-        <h2>الأرشيف <span>/ archive</span></h2>
-        <p>A collection of visual experiments and selected works.</p>
-      </div>
-
-      <!--
-        Existing projects are rendered by js/app.js.
-        Keep this container connected to your existing app.
-      -->
-      <div class="archive-content" id="archive-content">
-        <p class="txt">Loading projects...</p>
-      </div>
-
-    </section>
-
+    <p class="txt">loading...</p>
   </main>
 
-  <!-- FOOTER -->
   <footer id="foot" class="site-footer"></footer>
 
-  <!-- ARTWORK VIEWER -->
-  <dialog id="lb" aria-label="Artwork viewer">
-    <button id="lbx" type="button">Close</button>
+  <dialog id="lb" aria-label="artwork viewer">
+    <button id="lbx" type="button">close</button>
     <div id="lbc"></div>
   </dialog>
 
-/* lowercase english text across the website */
-html {
-  text-transform: lowercase;
-}
-
-
   <script src="js/app.js"></script>
-
 </body>
 </html>
