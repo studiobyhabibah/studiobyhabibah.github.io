@@ -44,3 +44,210 @@ dialog img{display:block;max-width:92vw;max-height:88vh;width:auto;height:auto}d
 @media(hover:none){.spine{flex-basis:64px}}
 @media(max-width:700px){.c1{max-width:19ch;font-size:.72rem}.c2{max-width:20ch;font-size:.72rem;top:38%}.pj,.about{grid-template-columns:1fr}.pj aside{position:static}.sqs{order:2}}
 @media(prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important;scroll-behavior:auto!important}}
+
+/* ===== STUDIO BY HABIBAH — NEW STYLE ===== */
+
+@import url('https://fonts.googleapis.com/css2?family=Allura&family=Manrope:wght@300;400;500;600&family=Noto+Naskh+Arabic:wght@400;500&display=swap');
+
+:root {
+  --olive: #000000;
+  --avo: #ffffff;
+  --pink: #ffffff;
+  --blue: #ffffff;
+  --navy: #000000;
+  --brown: #000000;
+  --yellow: #ffffff;
+  --gray: #000000;
+  --soft: #ffffff;
+  --black: #000000;
+}
+
+/* Pure black and white */
+html,
+body {
+  background: #ffffff;
+  color: #000000;
+}
+
+body {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 300;
+}
+
+/* Remove the grain texture */
+body::before {
+  display: none;
+}
+
+/* Clean typography */
+h1,
+h2,
+h3,
+.links a,
+.sec h2 {
+  font-family: 'Manrope', sans-serif;
+  font-weight: 400;
+  letter-spacing: -0.04em;
+  color: #000000;
+}
+
+/* Handwritten signature */
+.logo,
+.hero2 h1,
+.big {
+  font-family: 'Allura', cursive;
+  font-weight: 400;
+  letter-spacing: 0;
+  color: #000000;
+}
+
+.logo {
+  font-size: 2.3rem;
+  line-height: 1;
+}
+
+.hero2 h1 {
+  font-size: clamp(5rem, 15vw, 11rem);
+  line-height: 0.9;
+}
+
+/* Header and navigation */
+header {
+  background: #ffffff;
+  border-bottom: 1px solid #000000;
+}
+
+nav a {
+  border-bottom-width: 1px;
+}
+
+nav a:hover,
+nav a[aria-current] {
+  border-color: #000000;
+}
+
+/* Minimal first-page hero */
+.hero2 {
+  background: #ffffff;
+  border: none;
+  border-bottom: 1px solid #000000;
+  border-radius: 0;
+}
+
+.hero2 .vec,
+.hero2 .cap,
+.hero2 .tag {
+  display: none !important;
+}
+
+/* Keep the hero image, if present */
+.hero2 > img {
+  filter: none;
+}
+
+/* Remove colored surfaces */
+.art,
+.sq,
+.mos,
+.mosa,
+.t,
+.cover,
+.pj .art {
+  background-color: #ffffff;
+  border-color: #000000;
+}
+
+.mos {
+  padding-top: 40px;
+  padding-bottom: 40px;
+}
+
+.t {
+  background-image: none;
+}
+
+/* Portfolio dividers */
+.sec,
+.lib,
+.spine,
+.art {
+  border-color: #000000;
+}
+
+.spine {
+  background: #ffffff;
+}
+
+.sp {
+  background: #ffffff;
+  color: #000000;
+}
+
+.spine:hover .sp,
+.spine:focus-visible .sp {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Black and white buttons */
+button {
+  border: 1px solid #000000;
+  border-radius: 0;
+  background: #ffffff;
+  color: #000000;
+  font-family: 'Manrope', sans-serif;
+  font-weight: 300;
+}
+
+button[aria-pressed="true"],
+button:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Details and links */
+.meta,
+.num,
+.cap,
+.tag {
+  color: #000000;
+}
+
+.links a {
+  border-bottom: 1px solid #000000;
+}
+
+.links a:hover {
+  background: #000000;
+  color: #ffffff;
+}
+
+/* Footer */
+.bar {
+  background: #000000;
+  color: #ffffff;
+}
+
+.bar .big {
+  color: #ffffff;
+}
+
+/* Image viewer */
+dialog {
+  background: #ffffff;
+}
+
+dialog::backdrop {
+  background: rgba(0, 0, 0, 0.9);
+}
+
+#lbx {
+  background: #ffffff;
+  color: #000000;
+}
+
+/* Arabic text */
+[lang="ar"],
+[dir="rtl"] {
+  font-family: 'Noto Naskh Arabic', serif;
+}
