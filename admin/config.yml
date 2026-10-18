@@ -2,10 +2,10 @@ backend:
   name: github
   repo: studiobyhabibah/studiobyhabibah.github.io
   branch: main
-  media_folder: images/uploads
-  public_folder: images/uploads
+media_folder: images/uploads
+public_folder: images/uploads
+collections:
   - name: portfolio
-    label: Portfolio
     files:
       - name: projects
         label: Projects
