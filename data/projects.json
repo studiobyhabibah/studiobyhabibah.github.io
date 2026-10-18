@@ -1,64 +1,204 @@
 {
- "projects": [
-  {
-   "title": "Sample poster series",
-   "category": "Graphic Design",
-   "year": "",
-   "featured": true,
-   "description": "Placeholder description. Replace it from the admin page.",
-   "role": "",
-   "process": "",
-   "images": []
-  },
-  {
-   "title": "Sample identity system",
-   "category": "Branding & Visual Identity",
-   "year": "",
-   "featured": true,
-   "description": "Placeholder description. Replace it from the admin page.",
-   "role": "",
-   "process": "",
-   "images": []
-  },
-  {
-   "title": "Sample character study",
-   "category": "Illustration & Character Design",
-   "year": "",
-   "featured": true,
-   "description": "Placeholder description. Replace it from the admin page.",
-   "role": "",
-   "process": "",
-   "images": []
-  },
-  {
-   "title": "Sample comic pages",
-   "category": "Comics & Visual Storytelling",
-   "year": "",
-   "featured": false,
-   "description": "Placeholder description. Replace it from the admin page.",
-   "role": "",
-   "process": "",
-   "images": []
-  },
-  {
-   "title": "Sample photo set",
-   "category": "Photography",
-   "year": "",
-   "featured": false,
-   "description": "Placeholder description. Replace it from the admin page.",
-   "role": "",
-   "process": "",
-   "images": []
-  },
-  {
-   "title": "Sample motion piece",
-   "category": "Video & Motion",
-   "year": "",
-   "featured": false,
-   "description": "Placeholder description. Replace it from the admin page.",
-   "role": "",
-   "process": "",
-   "images": []
-  }
- ]
+  "projects": [
+    {
+      "title": "Project 01 — Poster Series",
+      "category": "Graphic Design",
+      "year": "",
+      "featured": true,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 02 — Visual Identity",
+      "category": "Branding & Visual Identity",
+      "year": "",
+      "featured": true,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 03 — Character Design",
+      "category": "Illustration & Character Design",
+      "year": "",
+      "featured": true,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 04 — Comic Story",
+      "category": "Comics & Visual Storytelling",
+      "year": "",
+      "featured": true,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 05 — Photography Series",
+      "category": "Photography",
+      "year": "",
+      "featured": true,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 06 — Motion Experiment",
+      "category": "Video & Motion",
+      "year": "",
+      "featured": true,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 07 — Editorial Design",
+      "category": "Graphic Design",
+      "year": "",
+      "featured": false,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 08 — Packaging Concept",
+      "category": "Branding & Visual Identity",
+      "year": "",
+      "featured": false,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 09 — Character Sheet",
+      "category": "Illustration & Character Design",
+      "year": "",
+      "featured": false,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 10 — Comic Cover",
+      "category": "Comics & Visual Storytelling",
+      "year": "",
+      "featured": false,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 11 — Art Direction",
+      "category": "Art Direction",
+      "year": "",
+      "featured": false,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 12 — Campaign Concept",
+      "category": "Creative Concept",
+      "year": "",
+      "featured": false,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 13 — Typography Study",
+      "category": "Graphic Design",
+      "year": "",
+      "featured": false,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 14 — Brand Applications",
+      "category": "Branding & Visual Identity",
+      "year": "",
+      "featured": false,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 15 — Illustrated World",
+      "category": "Illustration & Character Design",
+      "year": "",
+      "featured": false,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 16 — Storyboard",
+      "category": "Video & Motion",
+      "year": "",
+      "featured": false,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 17 — Photo Manipulation",
+      "category": "Photography",
+      "year": "",
+      "featured": false,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 18 — Zine Design",
+      "category": "Editorial Design",
+      "year": "",
+      "featured": false,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 19 — Visual Experiment",
+      "category": "Experimental Visuals",
+      "year": "",
+      "featured": false,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    },
+    {
+      "title": "Project 20 — Personal Project",
+      "category": "Personal Work",
+      "year": "",
+      "featured": false,
+      "description": "Add your project description here.",
+      "role": "",
+      "process": "",
+      "images": []
+    }
+  ]
 }
