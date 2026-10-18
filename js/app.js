@@ -1,3 +1,4 @@
+
 (function () {
   'use strict';
 
@@ -5,6 +6,11 @@
   var foot = document.getElementById('foot');
   var lb = document.getElementById('lb');
   var lbc = document.getElementById('lbc');
+
+  if (!app || !foot || !lb || !lbc) {
+    console.error('Portfolio: required HTML elements are missing.');
+    return;
+  }
 
   var S = {};
   var P = [];
@@ -61,22 +67,18 @@
     var text = plain(value).trim();
 
     return text
-      ? text.split(/\n{2,}/).map(function (p) {
-          return '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>';
-        }).join('')
+      ? text.split(/\n{2,}/)
+          .map(function (p) {
+            return '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>';
+          })
+          .join('')
       : '';
   }
 
   function projectImages(project) {
-    var images =
-      project.images ||
-      project.gallery ||
-      project.artworks ||
-      [];
+    var images = project.images || project.gallery || project.artworks || [];
 
-    if (!Array.isArray(images)) {
-      images = [];
-    }
+    if (!Array.isArray(images)) images = [];
 
     if (!images.length && (project.image || project.cover)) {
       images = [project.image || project.cover];
@@ -108,8 +110,7 @@
       esc(label || 'artwork preview') +
       '" xmlns="http://www.w3.org/2000/svg">' +
       '<defs><linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">' +
-      '<stop stop-color="#fffefa"/>' +
-      '<stop offset="1" stop-color="#f4e6a5"/>' +
+      '<stop stop-color="#fffefa"/><stop offset="1" stop-color="#f4e6a5"/>' +
       '</linearGradient></defs>' +
       '<rect width="600" height="750" fill="url(#paper)"/>' +
       '<circle cx="420" cy="180" r="115" fill="#fff" fill-opacity=".6"/>' +
@@ -136,16 +137,15 @@
       return !category ||
         category === 'all' ||
         String(item[0].category || 'other').toLowerCase() ===
-          String(category).toLowerCase();
+        String(category).toLowerCase();
     });
   }
 
   function archiveHeading() {
-    return '<div class="archive-heading">' +
-      '<div><h2>the archive</h2>' +
-      '<span class="translation" lang="ar" dir="rtl">أَرْشِيفُ الْأَعْمَالِ</span></div>' +
-      '<p>a collection of visual experiments and projects</p>' +
-      '</div>';
+    return '<div class="archive-heading"><div>' +
+      '<h2>the archive</h2>' +
+      '<span class="translation" lang="ar" dir="rtl">أَرْشِيفُ الْأَعْمَالِ</span>' +
+      '</div><p>a collection of visual experiments and projects</p></div>';
   }
 
   function lib(list) {
@@ -167,9 +167,7 @@
         '<span class="ring-card-number">' + esc(codeNumber(i + 1)) + '</span>' +
         '<span class="ring-card-title">' + esc(p.title || p.name || 'untitled project') + '</span>' +
         '<span class="ring-card-category">' + esc(p.category || 'project') + '</span>' +
-        '</span>' +
-        '<span class="ring-card-shine" aria-hidden="true"></span>' +
-        '</a>';
+        '</span><span class="ring-card-shine" aria-hidden="true"></span></a>';
     }).join('');
 
     return '<section class="ring-archive" aria-label="project archive">' +
@@ -178,33 +176,22 @@
       '<span class="archive-file-kicker">visual index / 2026</span>' +
       '<span class="archive-file-title-main">habibah / archive</span>' +
       '<span class="archive-file-ar" lang="ar" dir="rtl">أَرْشِيفُ الْأَعْمَالِ</span>' +
-      '</div>' +
-      '<div class="archive-file-total"><span>' +
-      pad(list.length) +
-      '</span><span>projects</span></div>' +
-      '</div>' +
+      '</div><div class="archive-file-total">' +
+      '<span>' + pad(list.length) + '</span><span>projects</span>' +
+      '</div></div>' +
       '<div class="ring-scene" aria-label="drag or scroll to rotate the 3D project archive">' +
-      '<div class="ring-stage"><div class="archive-ring">' +
-      cards +
-      '</div></div>' +
-      '<div class="ring-instructions">' +
-      '<span>drag to explore</span><span>scroll / swipe ↔</span>' +
-      '</div></div>' +
-      '<div class="archive-drawer-bottom">' +
-      '<span>independent visual archive</span>' +
-      '<span>3d / project index</span>' +
+      '<div class="ring-stage"><div class="archive-ring">' + cards + '</div></div>' +
       '</div></section>';
   }
 
   function hero() {
-    return '<section class="intro">' +
-      '<div class="intro-name">' +
-      '<h1>' + esc(S.name || 'habibah') + '</h1>' +
+    return '<section class="intro"><div class="intro-name">' +
+      '<h1>' + esc(S.name || 'حبيبه') + '</h1>' +
       '<p class="intro-title">' + esc(S.title || 'visual creative') + '</p>' +
       '<span class="translation" lang="ar" dir="rtl">مُبْدِعَةٌ بَصَرِيَّة</span>' +
-      '</div>' +
-      '<p class="intro-description">' +
-      esc(plain(S.intro || S.description || 'exploring design, characters, stories, and visual culture.')) +
+      '</div><p class="intro-description">' +
+      esc(plain(S.intro || S.description ||
+        'exploring design, characters, stories, and visual culture.')) +
       '</p></section>';
   }
 
@@ -213,10 +200,7 @@
 
     P.forEach(function (p) {
       var c = String(p.category || 'other').trim();
-
-      if (c) {
-        seen[c.toLowerCase()] = c;
-      }
+      if (c) seen[c.toLowerCase()] = c;
     });
 
     return Object.keys(seen).sort().map(function (key) {
@@ -231,7 +215,6 @@
           '<section class="archive-section">' +
           archiveHeading() +
           '<div class="archive-content">' + lib(items('all')) + '</div>' +
-          '<div class="archive-more"><a href="#/work">view all work ↗</a></div>' +
           '</section>';
       },
 
@@ -242,28 +225,21 @@
           '">all work</button>';
 
         buttons += categories().map(function (c) {
-          return '<button type="button" data-filter="' +
-            esc(c) +
+          return '<button type="button" data-filter="' + esc(c) +
             '" aria-pressed="' +
             (currentFilter.toLowerCase() === c.toLowerCase() ? 'true' : 'false') +
-            '">' +
-            esc(c) +
-            '</button>';
+            '">' + esc(c) + '</button>';
         }).join('');
 
         return '<section class="archive-section work-page">' +
           archiveHeading() +
-          '<div class="filters" aria-label="filter projects">' +
-          buttons +
-          '</div>' +
-          '<div id="project-ring-results">' +
-          lib(items(currentFilter)) +
-          '</div></section>';
+          '<div class="filters" aria-label="filter projects">' + buttons + '</div>' +
+          '<div id="project-ring-results">' + lib(items(currentFilter)) + '</div>' +
+          '</section>';
       },
 
       about: function () {
-        return '<section class="about">' +
-          '<h1>about</h1>' +
+        return '<section class="about"><h1>about</h1>' +
           '<span class="translation" lang="ar" dir="rtl">مَنْ أَنَا</span>' +
           '<div class="txt">' +
           paragraphs(S.about || S.bio || S.aboutText ||
@@ -275,36 +251,26 @@
         var c = S.contact || {};
         var links = Array.isArray(c) ? c : (c.links || S.links || []);
 
-        var html = '<section class="links"><div>' +
-          '<h1>contact</h1>' +
-          '<span class="translation" lang="ar" dir="rtl">تَوَاصُل</span>' +
-          '</div>';
+        var html = '<section class="links"><div><h1>contact</h1>' +
+          '<span class="translation" lang="ar" dir="rtl">تَوَاصُل</span></div>';
 
-        if (typeof c === 'string') {
-          html += paragraphs(c);
-        }
+        if (typeof c === 'string') html += paragraphs(c);
 
         if (Array.isArray(links)) {
           html += links.map(function (link) {
             if (typeof link === 'string') {
               return '<a href="' + esc(link) +
                 '" target="_blank" rel="noreferrer">' +
-                esc(link.replace(/^https?:\/\//, '')) +
-                ' ↗</a>';
+                esc(link.replace(/^https?:\/\//, '')) + ' ↗</a>';
             }
 
-            var label =
-              link.label || link.name || link.title ||
+            var label = link.label || link.name || link.title ||
               link.url || link.href || 'link';
-
-            var href =
-              link.url || link.href ||
+            var href = link.url || link.href ||
               (link.email ? 'mailto:' + link.email : '#');
 
             return '<a href="' + esc(href) + '"' +
-              (/^https?:/.test(href)
-                ? ' target="_blank" rel="noreferrer"'
-                : '') +
+              (/^https?:/.test(href) ? ' target="_blank" rel="noreferrer"' : '') +
               '>' + esc(label) + ' ↗</a>';
           }).join('');
         }
@@ -337,10 +303,8 @@
     var found = findProject(id);
 
     if (!found) {
-      return '<section class="about">' +
-        '<h1>project not found</h1>' +
-        '<a href="#/work">← back to work</a>' +
-        '</section>';
+      return '<section class="about"><h1>project not found</h1>' +
+        '<a href="#/work">← back to work</a></section>';
     }
 
     var p = found[0];
@@ -349,22 +313,16 @@
     var title = p.title || p.name || 'untitled project';
 
     var gallery = images.map(function (image, n) {
-      return '<button class="sq" type="button" data-lightbox-index="' +
-        n +
-        '" aria-label="view image ' +
-        (n + 1) +
-        '">' +
+      return '<button class="sq" type="button" data-lightbox-index="' + n +
+        '" aria-label="view image ' + (n + 1) + '">' +
         '<span class="num">' + pad(n + 1) + '</span>' +
-        '<span class="art">' + art(p, n) + '</span>' +
-        '</button>';
+        '<span class="art">' + art(p, n) + '</span></button>';
     }).join('');
 
-    var aside = '<aside>' +
-      '<a href="#/work">← back to archive</a>' +
+    var aside = '<aside><a href="#/work">← back to archive</a>' +
       '<span class="translation" lang="ar" dir="rtl">أَرْشِيفُ الْأَعْمَالِ</span>' +
-      '<p class="project-code">' +
-      esc(codeNumber(i + 1)) + ' / ' + esc(p.category || 'project') +
-      '</p>' +
+      '<p class="project-code">' + esc(codeNumber(i + 1)) +
+      ' / ' + esc(p.category || 'project') + '</p>' +
       '<h1>' + esc(title) + '</h1>' +
       '<div class="it">' +
       paragraphs(p.description || p.about || p.text || p.summary || '') +
@@ -374,32 +332,27 @@
 
     ['year', 'client', 'role', 'tools', 'medium'].forEach(function (key) {
       if (p[key]) {
-        meta.push(
-          '<li><span>' + esc(key) + '</span><span>' +
+        meta.push('<li><span>' + esc(key) + '</span><span>' +
           esc(Array.isArray(p[key]) ? p[key].join(', ') : p[key]) +
-          '</span></li>'
-        );
+          '</span></li>');
       }
     });
 
     if (meta.length) {
       aside += '<h3>project notes</h3><ul class="cl">' +
-        meta.join('') +
-        '</ul>';
+        meta.join('') + '</ul>';
     }
 
-    return '<section class="pj">' +
-      '<div class="sqs">' +
+    aside += '</aside>';
+
+    return '<section class="pj"><div class="sqs">' +
       (gallery || '<div class="sq"><span class="art">' + art(p, 0) + '</span></div>') +
-      '</div>' +
-      aside +
-      '</aside></section>';
+      '</div>' + aside + '</section>';
   }
 
   function renderFooter() {
-    foot.innerHTML =
-      '<div class="bar">' +
-      '<a class="big" href="#/">habibah</a>' +
+    foot.innerHTML = '<div class="bar">' +
+      '<a class="big" href="#/">حبيبه</a>' +
       '<a class="nav-label" href="#/work">work<span class="translation" lang="ar" dir="rtl">الأَعْمَال</span></a>' +
       '<a class="nav-label" href="#/about">about<span class="translation" lang="ar" dir="rtl">مَنْ أَنَا</span></a>' +
       '<a class="nav-label" href="#/contact">contact<span class="translation" lang="ar" dir="rtl">تَوَاصُل</span></a>' +
@@ -409,39 +362,49 @@
   function setupArchiveRing() {
     if (ringCleanup) {
       ringCleanup();
+      ringCleanup = null;
+    }
+
+    if (ringFrame) {
+      cancelAnimationFrame(ringFrame);
+      ringFrame = 0;
     }
 
     var scene = document.querySelector('.ring-scene');
     var ring = scene && scene.querySelector('.archive-ring');
 
-    if (!scene || !ring) {
-      return;
-    }
-
-    if (ringFrame) {
-      cancelAnimationFrame(ringFrame);
-    }
-
-    ringFrame = 0;
+    if (!scene || !ring) return;
 
     var cards = Array.prototype.slice.call(ring.children);
     var count = cards.length;
 
-    if (!count) {
-      return;
-    }
+    if (!count) return;
 
     var rotation = 0;
     var target = 0;
+    var velocity = 0;
+    var lastMouseX = null;
     var dragging = false;
     var moved = false;
     var startX = 0;
     var lastX = 0;
     var pointerId = null;
     var suppressClick = false;
+    var suppressTimer = null;
+    var destroyed = false;
 
     var reduced = window.matchMedia &&
       window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function render() {
+      ring.style.transform = 'rotateX(-7deg) rotateY(' + rotation + 'deg)';
+
+      cards.forEach(function (card, index) {
+        var angle = (index * 360 / count + rotation) * Math.PI / 180;
+        card.style.zIndex = String(Math.round((Math.cos(angle) + 1) * 1000));
+        card.style.pointerEvents = 'auto';
+      });
+    }
 
     function arrange() {
       var mobile = window.innerWidth <= 560;
@@ -456,93 +419,127 @@
               Math.min(520, width / (2 * Math.tan(Math.PI / count)))
             );
 
-      cards.forEach(function (card, i) {
+      cards.forEach(function (card, index) {
         card.style.transform =
           'translate(-50%, -50%) rotateY(' +
-          (i * 360 / count) +
-          'deg) translateZ(' +
-          radius +
-          'px)';
+          (index * 360 / count) +
+          'deg) translateZ(' + radius + 'px)';
       });
 
-      ring.style.transform =
-        'rotateX(-7deg) rotateY(' + rotation + 'deg)';
+      render();
     }
 
     function tick() {
-      rotation += (target - rotation) * 0.085;
+      ringFrame = 0;
+      if (destroyed) return;
 
-      if (Math.abs(target - rotation) < 0.02) {
+      if (reduced) {
         rotation = target;
+        velocity = 0;
+        render();
+        return;
       }
 
-      ring.style.transform =
-        'rotateX(-7deg) rotateY(' + rotation + 'deg)';
+      var difference = target - rotation;
+      velocity += difference * 0.075;
+      velocity *= 0.78;
+      rotation += velocity;
 
-      if (Math.abs(target - rotation) >= 0.02) {
-        ringFrame = requestAnimationFrame(tick);
-      } else {
-        ringFrame = 0;
+      if (
+        Math.abs(difference) < 0.025 &&
+        Math.abs(velocity) < 0.025
+      ) {
+        rotation = target;
+        velocity = 0;
+        render();
+        return;
       }
+
+      render();
+      ringFrame = requestAnimationFrame(tick);
     }
 
     function animate() {
+      if (destroyed) return;
+
       if (reduced) {
         rotation = target;
-        ring.style.transform =
-          'rotateX(-7deg) rotateY(' + rotation + 'deg)';
+        velocity = 0;
+        render();
       } else if (!ringFrame) {
         ringFrame = requestAnimationFrame(tick);
       }
     }
 
-    function wheel(e) {
-      target += (e.deltaY + e.deltaX) * 0.15;
-      animate();
-    }
+    function onMouseMove(event) {
+      if (
+        event.pointerType === 'touch' ||
+        dragging ||
+        window.innerWidth <= 560
+      ) return;
 
-    function down(e) {
-      if (e.pointerType === 'mouse' && e.button !== 0) {
+      if (lastMouseX === null) {
+        lastMouseX = event.clientX;
         return;
       }
 
+      var delta = event.clientX - lastMouseX;
+      lastMouseX = event.clientX;
+
+      if (Math.abs(delta) > 90 || delta === 0) return;
+
+      target += delta * 0.42;
+      animate();
+    }
+
+    function onMouseLeave() {
+      lastMouseX = null;
+    }
+
+    function onPointerDown(event) {
+      if (event.pointerType === 'mouse') return;
+      if (event.button !== undefined && event.button !== 0) return;
+
       dragging = true;
       moved = false;
-      startX = lastX = e.clientX;
-      pointerId = e.pointerId;
+      startX = lastX = event.clientX;
+      pointerId = event.pointerId;
 
       scene.classList.add('is-dragging');
 
       if (scene.setPointerCapture) {
         try {
           scene.setPointerCapture(pointerId);
-        } catch (err) {}
+        } catch (error) {}
       }
     }
 
-    function move(e) {
-      if (!dragging || e.pointerId !== pointerId) {
-        return;
-      }
+    function onTouchMove(event) {
+      if (
+        event.pointerType === 'mouse' ||
+        !dragging ||
+        event.pointerId !== pointerId
+      ) return;
 
-      var dx = e.clientX - lastX;
+      var delta = event.clientX - lastX;
 
-      if (Math.abs(e.clientX - startX) > 5) {
+      if (Math.abs(event.clientX - startX) > 6) {
         moved = true;
       }
 
       if (moved) {
-        target += dx * 0.45;
+        target += delta * 0.5;
         animate();
       }
 
-      lastX = e.clientX;
+      lastX = event.clientX;
     }
 
-    function up(e) {
-      if (!dragging || (e.pointerId != null && e.pointerId !== pointerId)) {
-        return;
-      }
+    function onPointerUp(event) {
+      if (
+        !dragging ||
+        (event.pointerId != null && event.pointerId !== pointerId)
+      ) return;
 
       dragging = false;
       scene.classList.remove('is-dragging');
@@ -550,49 +547,71 @@
       if (moved) {
         suppressClick = true;
 
-        window.setTimeout(function () {
+        if (suppressTimer) window.clearTimeout(suppressTimer);
+
+        suppressTimer = window.setTimeout(function () {
           suppressClick = false;
+          suppressTimer = null;
         }, 250);
       }
 
       pointerId = null;
+      lastMouseX = null;
     }
 
-    function click(e) {
+    function onClick(event) {
+      var card = event.target.closest &&
+        event.target.closest('a.ring-card');
+
       if (suppressClick) {
-        e.preventDefault();
-        e.stopPropagation();
+        event.preventDefault();
+        event.stopPropagation();
         suppressClick = false;
+
+        if (suppressTimer) {
+          window.clearTimeout(suppressTimer);
+          suppressTimer = null;
+        }
+
+        return;
+      }
+
+      if (card && card.getAttribute('href')) {
+        event.preventDefault();
+        window.location.hash = card.getAttribute('href').replace(/^#/, '');
       }
     }
 
-    function resize() {
+    function onResize() {
+      lastMouseX = null;
       arrange();
     }
 
-    scene.addEventListener('wheel', wheel, { passive: true });
-    scene.addEventListener('pointerdown', down);
-    scene.addEventListener('pointermove', move);
-    scene.addEventListener('pointerup', up);
-    scene.addEventListener('pointercancel', up);
-    scene.addEventListener('click', click, true);
-
-    window.addEventListener('resize', resize, { passive: true });
+    scene.addEventListener('pointermove', onMouseMove);
+    scene.addEventListener('pointerleave', onMouseLeave);
+    scene.addEventListener('pointerdown', onPointerDown);
+    scene.addEventListener('pointermove', onTouchMove);
+    scene.addEventListener('pointerup', onPointerUp);
+    scene.addEventListener('pointercancel', onPointerUp);
+    scene.addEventListener('click', onClick, true);
+    window.addEventListener('resize', onResize, { passive: true });
 
     arrange();
 
     ringCleanup = function () {
-      scene.removeEventListener('wheel', wheel);
-      scene.removeEventListener('pointerdown', down);
-      scene.removeEventListener('pointermove', move);
-      scene.removeEventListener('pointerup', up);
-      scene.removeEventListener('pointercancel', up);
-      scene.removeEventListener('click', click, true);
-      window.removeEventListener('resize', resize);
+      destroyed = true;
 
-      if (ringFrame) {
-        cancelAnimationFrame(ringFrame);
-      }
+      scene.removeEventListener('pointermove', onMouseMove);
+      scene.removeEventListener('pointerleave', onMouseLeave);
+      scene.removeEventListener('pointerdown', onPointerDown);
+      scene.removeEventListener('pointermove', onTouchMove);
+      scene.removeEventListener('pointerup', onPointerUp);
+      scene.removeEventListener('pointercancel', onPointerUp);
+      scene.removeEventListener('click', onClick, true);
+      window.removeEventListener('resize', onResize);
+
+      if (suppressTimer) window.clearTimeout(suppressTimer);
+      if (ringFrame) cancelAnimationFrame(ringFrame);
 
       ringFrame = 0;
     };
@@ -606,7 +625,7 @@
 
     var page = parts[0] || 'home';
     var id = parts[1];
-    var title = 'habibah — visual creative';
+    var title = 'حبيبه — visual creative';
 
     if (page === 'work' && id) {
       app.innerHTML = project(id);
@@ -614,7 +633,7 @@
       var found = findProject(id);
 
       if (found) {
-        title = (found[0].title || found[0].name || 'project') + ' — habibah';
+        title = (found[0].title || found[0].name || 'project') + ' — حبيبه';
       }
 
       if (ringCleanup) {
@@ -624,24 +643,16 @@
     } else {
       var allViews = views();
 
-      if (!allViews[page]) {
-        page = 'home';
-      }
+      if (!allViews[page]) page = 'home';
 
       app.innerHTML = allViews[page]();
 
-      if (page === 'about') {
-        title = 'about — habibah';
-      }
-
-      if (page === 'contact') {
-        title = 'contact — habibah';
-      }
+      if (page === 'about') title = 'about — حبيبه';
+      if (page === 'contact') title = 'contact — حبيبه';
 
       setupArchiveRing();
     }
 
-    app.setAttribute('aria-busy', 'false');
     document.title = title;
 
     document.querySelectorAll('.main-nav a').forEach(function (link) {
@@ -669,9 +680,7 @@
         button.setAttribute(
           'aria-pressed',
           button.getAttribute('data-filter').toLowerCase() ===
-            currentFilter.toLowerCase()
-            ? 'true'
-            : 'false'
+          currentFilter.toLowerCase() ? 'true' : 'false'
         );
       });
 
@@ -695,22 +704,17 @@
       var found = findProject(id);
 
       if (found) {
-        openImage(
-          found[0],
-          Number(imageButton.getAttribute('data-lightbox-index'))
-        );
+        openImage(found[0], Number(imageButton.getAttribute('data-lightbox-index')));
       }
     }
   });
 
-  function openImage(project, index) {
-    lbc.innerHTML = art(project, index);
+  function openImage(projectData, index) {
+    lbc.innerHTML = art(projectData, index);
 
     var image = lbc.querySelector('img');
 
-    if (image) {
-      image.removeAttribute('loading');
-    }
+    if (image) image.removeAttribute('loading');
 
     if (typeof lb.showModal === 'function') {
       lb.showModal();
@@ -720,28 +724,30 @@
   }
 
   function closeImage() {
-    if (lb.open) {
+    if (lb.open && typeof lb.close === 'function') {
       lb.close();
     } else {
       lb.removeAttribute('open');
     }
   }
 
-  document.getElementById('lbx').addEventListener('click', closeImage);
+  var lightboxClose = document.getElementById('lbx');
 
-  lb.addEventListener('click', function (e) {
-    if (e.target === lb) {
-      closeImage();
-    }
+  if (lightboxClose) {
+    lightboxClose.addEventListener('click', closeImage);
+  }
+
+  lb.addEventListener('click', function (event) {
+    if (event.target === lb) closeImage();
   });
 
   function loadJSON(url) {
-    return fetch(url, { cache: 'no-cache' }).then(function (r) {
-      if (!r.ok) {
+    return fetch(url, { cache: 'no-cache' }).then(function (response) {
+      if (!response.ok) {
         throw new Error('Could not load ' + url);
       }
 
-      return r.json();
+      return response.json();
     });
   }
 
@@ -759,20 +765,17 @@
 
     P = Array.isArray(projects)
       ? projects
-      : (projects && Array.isArray(projects.projects)
-          ? projects.projects
-          : []);
+      : (projects && Array.isArray(projects.projects) ? projects.projects : []);
 
     renderFooter();
     route();
-  }).catch(function () {
-    app.innerHTML =
-      '<section class="about">' +
-      '<h1>something went wrong</h1>' +
-      '<p>please check data/site.json and data/projects.json.</p>' +
-      '</section>';
+  }).catch(function (error) {
+    console.error('Portfolio loading error:', error);
 
-    app.setAttribute('aria-busy', 'false');
+    app.innerHTML =
+      '<section class="about"><h1>something went wrong</h1>' +
+      '<p>please check data/site.json and data/projects.json.</p></section>';
+
     renderFooter();
   });
 
