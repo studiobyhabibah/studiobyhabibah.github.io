@@ -1413,3 +1413,185 @@ dialog#lb::backdrop {
     animation-duration: .01ms !important;
   }
 }
+```css
+/* ==========================================
+   HABIBAH — CODE ARCHIVE
+   Editorial / Brutalist / Paper Folders
+   ========================================== */
+
+:root {
+  --archive-paper: #e9dfcc;
+  --archive-blue: #687d8b;
+  --archive-brown: #725440;
+  --archive-dark: #292824;
+  --archive-cream: #f5efe4;
+  --archive-line: rgba(41, 40, 36, 0.22);
+}
+
+/* Archive container */
+#archive,
+.archive,
+.archive-section {
+  position: relative;
+  isolation: isolate;
+}
+
+/* Archive project cards */
+#archive .project,
+#archive .item,
+#archive .archive-item,
+.archive .project,
+.archive .item,
+.archive .archive-item,
+.archive-section .project,
+.archive-section .item {
+  position: relative;
+  overflow: hidden;
+  isolation: isolate;
+  box-sizing: border-box;
+
+  background:
+    linear-gradient(
+      145deg,
+      rgba(255, 255, 255, 0.30),
+      transparent 45%
+    ),
+    var(--archive-paper);
+
+  border: 1px solid var(--archive-line);
+  border-radius: 2px;
+
+  box-shadow:
+    0 2px 3px rgba(41, 40, 36, 0.04),
+    0 10px 25px rgba(41, 40, 36, 0.07);
+
+  transition:
+    transform 0.35s ease,
+    box-shadow 0.35s ease,
+    background-color 0.35s ease;
+}
+
+/* Paper grain */
+#archive .project::after,
+#archive .item::after,
+#archive .archive-item::after,
+.archive .project::after,
+.archive .item::after,
+.archive .archive-item::after,
+.archive-section .project::after,
+.archive-section .item::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  pointer-events: none;
+
+  opacity: 0.15;
+
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 180 180' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.85' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='.22'/%3E%3C/svg%3E");
+
+  mix-blend-mode: multiply;
+}
+
+/* Hover — lifted paper */
+#archive .project:hover,
+#archive .item:hover,
+#archive .archive-item:hover,
+.archive .project:hover,
+.archive .item:hover,
+.archive .archive-item:hover,
+.archive-section .project:hover,
+.archive-section .item:hover {
+  transform: translateY(-5px);
+
+  box-shadow:
+    0 5px 10px rgba(41, 40, 36, 0.07),
+    0 20px 35px rgba(41, 40, 36, 0.13);
+}
+
+/* Alternating folder colors */
+#archive .project:nth-child(5n + 1),
+#archive .item:nth-child(5n + 1),
+#archive .archive-item:nth-child(5n + 1) {
+  background-color: var(--archive-blue);
+}
+
+#archive .project:nth-child(5n + 2),
+#archive .item:nth-child(5n + 2),
+#archive .archive-item:nth-child(5n + 2) {
+  background-color: var(--archive-paper);
+}
+
+#archive .project:nth-child(5n + 3),
+#archive .item:nth-child(5n + 3),
+#archive .archive-item:nth-child(5n + 3) {
+  background-color: var(--archive-brown);
+}
+
+#archive .project:nth-child(5n + 4),
+#archive .item:nth-child(5n + 4),
+#archive .archive-item:nth-child(5n + 4) {
+  background-color: var(--archive-dark);
+  color: var(--archive-cream);
+}
+
+#archive .project:nth-child(5n + 5),
+#archive .item:nth-child(5n + 5),
+#archive .archive-item:nth-child(5n + 5) {
+  background-color: #b6a58c;
+}
+
+/* Fine editorial grid */
+#archive .project,
+#archive .item,
+#archive .archive-item {
+  background-image:
+    linear-gradient(
+      rgba(41, 40, 36, 0.035) 1px,
+      transparent 1px
+    ),
+    linear-gradient(
+      90deg,
+      rgba(41, 40, 36, 0.035) 1px,
+      transparent 1px
+    );
+  background-size: 24px 24px;
+}
+
+/* Technical labels */
+#archive .project small,
+#archive .item small,
+#archive .archive-item small {
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  opacity: 0.7;
+}
+
+/* Images */
+#archive img,
+.archive img,
+.archive-section img {
+  transition:
+    transform 0.5s ease,
+    filter 0.5s ease;
+}
+
+#archive .project:hover img,
+#archive .item:hover img,
+#archive .archive-item:hover img,
+.archive .project:hover img,
+.archive .item:hover img {
+  transform: scale(1.025);
+  filter: contrast(1.04);
+}
+
+/* Reduced motion accessibility */
+@media (prefers-reduced-motion: reduce) {
+  #archive *,
+  .archive *,
+  .archive-section * {
+    transition: none !important;
+    animation: none !important;
+  }
+}
+```
