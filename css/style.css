@@ -1,3 +1,4 @@
+@import url('https://fonts.googleapis.com/css2?family=Amiri:wght@400;700&family=Great+Vibes&family=Libre+Baskerville:wght@400;700&display=swap');
 :root{--olive:#6b7a2e;--avo:#c2c984;--pink:#efcfd1;--blue:#cfdbe0;--navy:#1c2842;--brown:#8a5a3b;--yellow:#eadf9f;--gray:#9a9d98;--soft:#f2f2ec;--black:#141414}
 *{box-sizing:border-box;margin:0}html{scroll-behavior:smooth}
 body{background:var(--soft);color:var(--navy);font:16px/1.6 "Helvetica Neue",Arial,sans-serif;overflow-x:hidden}
@@ -47,7 +48,7 @@ dialog img{display:block;max-width:92vw;max-height:88vh;width:auto;height:auto}d
 
 /* ===== STUDIO BY HABIBAH — NEW STYLE ===== */
 
-@import url('https://fonts.googleapis.com/css2?family=Allura&family=Manrope:wght@300;400;500;600&family=Noto+Naskh+Arabic:wght@400;500&display=swap');
+/* ===== STUDIO BY HABIBAH: BLACK & WHITE ===== */
 
 :root {
   --olive: #000000;
@@ -62,7 +63,7 @@ dialog img{display:block;max-width:92vw;max-height:88vh;width:auto;height:auto}d
   --black: #000000;
 }
 
-/* Pure black and white */
+/* Pure black and white throughout */
 html,
 body {
   background: #ffffff;
@@ -70,68 +71,59 @@ body {
 }
 
 body {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 300;
+  font-family: 'Libre Baskerville', serif;
+  font-weight: 400;
 }
 
-/* Remove the grain texture */
-body::before {
-  display: none;
-}
-
-/* Clean typography */
+/* English text and headings */
 h1,
 h2,
 h3,
+nav,
+nav a,
 .links a,
-.sec h2 {
-  font-family: 'Manrope', sans-serif;
-  font-weight: 400;
-  letter-spacing: -0.04em;
-  color: #000000;
+.sec h2,
+button,
+.pj,
+.about,
+.txt,
+.meta,
+.cl,
+.it {
+  font-family: 'Libre Baskerville', serif;
 }
 
-/* Handwritten signature */
+/* Your name and main title */
 .logo,
 .hero2 h1,
 .big {
-  font-family: 'Allura', cursive;
+  font-family: 'Great Vibes', cursive;
   font-weight: 400;
   letter-spacing: 0;
   color: #000000;
 }
 
+/* Signature sizing */
 .logo {
-  font-size: 2.3rem;
-  line-height: 1;
+  font-size: 2rem;
+  line-height: 1.2;
 }
 
 .hero2 h1 {
-  font-size: clamp(5rem, 15vw, 11rem);
-  line-height: 0.9;
+  font-size: clamp(4rem, 12vw, 9rem);
+  line-height: 1.1;
 }
 
-/* Header and navigation */
-header {
-  background: #ffffff;
-  border-bottom: 1px solid #000000;
+/* Arabic */
+:lang(ar),
+[lang="ar"],
+[dir="rtl"] {
+  font-family: 'Amiri', serif;
 }
 
-nav a {
-  border-bottom-width: 1px;
-}
-
-nav a:hover,
-nav a[aria-current] {
-  border-color: #000000;
-}
-
-/* Minimal first-page hero */
-.hero2 {
-  background: #ffffff;
-  border: none;
-  border-bottom: 1px solid #000000;
-  border-radius: 0;
+/* Remove grain and decorative shapes */
+body::before {
+  display: none;
 }
 
 .hero2 .vec,
@@ -140,81 +132,54 @@ nav a[aria-current] {
   display: none !important;
 }
 
-/* Keep the hero image, if present */
-.hero2 > img {
-  filter: none;
-}
-
-/* Remove colored surfaces */
+/* White backgrounds, black borders */
+header,
+.hero2,
 .art,
 .sq,
+.spine,
+.sp,
 .mos,
 .mosa,
 .t,
-.cover,
-.pj .art {
+dialog {
   background-color: #ffffff;
+  color: #000000;
   border-color: #000000;
 }
 
-.mos {
-  padding-top: 40px;
-  padding-bottom: 40px;
-}
-
-.t {
-  background-image: none;
-}
-
-/* Portfolio dividers */
+/* Clean dividers */
+header,
 .sec,
 .lib,
 .spine,
-.art {
+.art,
+.links a {
   border-color: #000000;
 }
 
-.spine {
-  background: #ffffff;
-}
-
-.sp {
+/* Buttons */
+button {
   background: #ffffff;
   color: #000000;
-}
-
-.spine:hover .sp,
-.spine:focus-visible .sp {
-  background: #000000;
-  color: #ffffff;
-}
-
-/* Black and white buttons */
-button {
   border: 1px solid #000000;
   border-radius: 0;
-  background: #ffffff;
-  color: #000000;
-  font-family: 'Manrope', sans-serif;
-  font-weight: 300;
 }
 
-button[aria-pressed="true"],
-button:hover {
+button:hover,
+button[aria-pressed="true"] {
   background: #000000;
   color: #ffffff;
 }
 
-/* Details and links */
-.meta,
-.num,
-.cap,
-.tag {
+/* Links */
+a {
   color: #000000;
 }
 
-.links a {
-  border-bottom: 1px solid #000000;
+nav a:hover,
+nav a[aria-current] {
+  border-color: #000000;
 }
 
 .links a:hover {
@@ -222,7 +187,7 @@ button:hover {
   color: #ffffff;
 }
 
-/* Footer */
+/* Black footer with white text */
 .bar {
   background: #000000;
   color: #ffffff;
@@ -233,10 +198,6 @@ button:hover {
 }
 
 /* Image viewer */
-dialog {
-  background: #ffffff;
-}
-
 dialog::backdrop {
   background: rgba(0, 0, 0, 0.9);
 }
@@ -246,8 +207,76 @@ dialog::backdrop {
   color: #000000;
 }
 
+/* Accessible keyboard focus */
+:focus-visible {
+  outline: 2px solid #000000;
+  outline-offset: 4px;
+}
+
+/* ===== FINAL TYPOGRAPHY FIX ===== */
+
+/* All English text */
+body,
+nav,
+nav a,
+h1,
+h2,
+h3,
+button,
+.pj,
+.about,
+.txt,
+.meta,
+.cl,
+.it,
+.links a {
+  font-family: 'Libre Baskerville', serif;
+}
+
+/* Your name and main hero title */
+.logo,
+.hero2 h1,
+.big {
+  font-family: 'Great Vibes', cursive;
+  font-weight: 400;
+  letter-spacing: 0;
+}
+
 /* Arabic text */
+:lang(ar),
 [lang="ar"],
 [dir="rtl"] {
-  font-family: 'Noto Naskh Arabic', serif;
+  font-family: 'Amiri', serif;
+}
+
+/* Strict black and white */
+html,
+body,
+header,
+main,
+.hero2,
+.art,
+.sq,
+.spine,
+.mos,
+.mosa,
+.t,
+dialog {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+header,
+.sec,
+.lib,
+.spine,
+.art,
+.links a,
+button {
+  border-color: #000000;
+}
+
+/* Remove old decorative texture */
+body::before {
+  display: none;
 }
