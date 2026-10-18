@@ -1073,3 +1073,229 @@ img {
     background-attachment: scroll;
   }
 }
+
+/* accordion file — studio by habibah */
+
+.archive-accordion {
+  --file-yellow: #f4e6a5;
+  --file-brown: #65472f;
+  --file-cream: #fff9e8;
+
+  position: relative;
+  max-width: 100%;
+  margin: 28px auto;
+  padding: 16px;
+  overflow: hidden;
+
+  background:
+    linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.72),
+      rgba(244, 230, 165, 0.68) 55%,
+      rgba(255, 249, 232, 0.8)
+    );
+
+  border: 1px solid rgba(255, 255, 255, 0.8);
+  border-radius: 18px;
+
+  box-shadow:
+    0 16px 40px rgba(101, 71, 47, 0.13),
+    inset 0 1px 1px rgba(255, 255, 255, 0.9);
+
+  backdrop-filter: blur(18px);
+  -webkit-backdrop-filter: blur(18px);
+}
+
+/* warm sunlight */
+.archive-accordion::before {
+  content: "";
+  position: absolute;
+  top: -100px;
+  left: -70px;
+  width: 260px;
+  height: 220px;
+
+  background: rgba(255, 255, 230, 0.72);
+  filter: blur(65px);
+  pointer-events: none;
+}
+
+/* accordion sections */
+.archive-accordion details {
+  position: relative;
+  margin: 0 0 10px;
+  overflow: hidden;
+
+  background: rgba(255, 249, 232, 0.48);
+  border: 1px solid rgba(101, 71, 47, 0.14);
+  border-radius: 12px;
+
+  box-shadow:
+    0 4px 12px rgba(101, 71, 47, 0.07),
+    inset 0 1px rgba(255, 255, 255, 0.85);
+
+  transition:
+    background 0.3s ease,
+    box-shadow 0.3s ease,
+    transform 0.3s ease;
+}
+
+.archive-accordion details:hover {
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow: 0 8px 20px rgba(101, 71, 47, 0.12);
+}
+
+.archive-accordion summary {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14px;
+
+  padding: 17px 18px;
+  color: var(--file-brown);
+  cursor: pointer;
+  list-style: none;
+  user-select: none;
+}
+
+.archive-accordion summary::-webkit-details-marker {
+  display: none;
+}
+
+.archive-accordion .folder-label {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.archive-accordion .folder-number {
+  font-size: 11px;
+  opacity: 0.65;
+  letter-spacing: 0.08em;
+}
+
+.archive-accordion .folder-name {
+  font-size: 14px;
+  font-weight: 400;
+  letter-spacing: 0.025em;
+}
+
+.archive-accordion .folder-icon {
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+
+  width: 27px;
+  height: 27px;
+  border-radius: 50%;
+
+  background: rgba(255, 255, 255, 0.65);
+  border: 1px solid rgba(101, 71, 47, 0.12);
+
+  transition: transform 0.3s ease;
+}
+
+.archive-accordion details[open] .folder-icon {
+  transform: rotate(45deg);
+}
+
+.archive-accordion details[open] {
+  background: rgba(255, 249, 232, 0.78);
+  border-color: rgba(101, 71, 47, 0.24);
+}
+
+.archive-accordion .folder-content {
+  padding: 0 18px 20px;
+  color: var(--file-brown);
+  animation: folder-reveal 0.35s ease both;
+}
+
+@keyframes folder-reveal {
+  from {
+    opacity: 0;
+    transform: translateY(-6px);
+  }
+
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+/* projects inside the folder */
+.archive-accordion .folder-projects {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.archive-accordion .folder-project {
+  display: block;
+  min-width: 0;
+  overflow: hidden;
+
+  color: inherit;
+  text-decoration: none;
+
+  background: rgba(255, 255, 255, 0.58);
+  border: 1px solid rgba(101, 71, 47, 0.12);
+  border-radius: 9px;
+
+  transition:
+    transform 0.25s ease,
+    box-shadow 0.25s ease;
+}
+
+.archive-accordion .folder-project:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 8px 18px rgba(101, 71, 47, 0.12);
+}
+
+.archive-accordion .folder-project img {
+  display: block;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.archive-accordion .project-caption {
+  display: block;
+  padding: 10px;
+  font-size: 12px;
+}
+
+.archive-accordion summary:focus-visible,
+.archive-accordion a:focus-visible {
+  outline: 2px solid var(--file-brown);
+  outline-offset: 3px;
+}
+
+@media (max-width: 480px) {
+  .archive-accordion {
+    padding: 10px;
+    border-radius: 14px;
+  }
+
+  .archive-accordion summary {
+    padding: 15px 12px;
+  }
+
+  .archive-accordion .folder-content {
+    padding: 0 12px 15px;
+  }
+
+  .archive-accordion .folder-projects {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .archive-accordion *,
+  .archive-accordion *::before,
+  .archive-accordion *::after {
+    animation: none !important;
+    transition: none !important;
+  }
+}
