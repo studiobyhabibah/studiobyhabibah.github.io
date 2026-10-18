@@ -1146,3 +1146,277 @@ dialog#lb::backdrop {
     animation-duration: .01ms !important;
   }
 }
+
+
+/* ========================================
+   HABIBAH — ISOMETRIC ARCHIVE OVERVIEW
+   Keeps the existing project markup and interactions.
+   ======================================== */
+
+/* Desktop: show the archive as a complete, stepped overview */
+@media (min-width: 851px) {
+  .archive-section {
+    overflow: hidden;
+  }
+
+  .archive-drawer {
+    padding: 18px 18px 0;
+    overflow: hidden;
+    background: #fff;
+    box-shadow: 0 5px 0 #000;
+  }
+
+  .archive-files {
+    display: grid;
+    grid-template-columns: repeat(5, minmax(0, 1fr));
+    align-items: stretch;
+    gap: 18px 14px;
+    padding: 28px 10px 34px;
+    overflow: visible;
+    perspective: 1100px;
+  }
+
+  .archive-file,
+  .archive-file + .archive-file {
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    align-self: start;
+    transform: translate3d(0, 0, 0);
+    transform-origin: center;
+    box-shadow: 3px 4px 0 rgba(0, 0, 0, .10);
+    transition:
+      transform .28s ease,
+      box-shadow .28s ease;
+  }
+
+  /* Stagger the cards to create a diagonal archive path */
+  .archive-file:nth-child(5n + 1) { margin-top: 0; }
+  .archive-file:nth-child(5n + 2) { margin-top: 22px; }
+  .archive-file:nth-child(5n + 3) { margin-top: 44px; }
+  .archive-file:nth-child(5n + 4) { margin-top: 66px; }
+  .archive-file:nth-child(5n)     { margin-top: 88px; }
+
+  .archive-file-tab {
+    min-width: 0;
+    max-width: calc(100% - 14px);
+    min-height: 27px;
+    margin-left: 7px;
+    padding: 4px 7px;
+    font-size: 8px;
+  }
+
+  .archive-file-tab .archive-file-title {
+    font-size: 8px;
+  }
+
+  .archive-file-body {
+    min-height: 0;
+    padding: 8px;
+  }
+
+  .archive-file-number {
+    margin-bottom: 7px;
+    font-size: 8px;
+  }
+
+  .archive-file-preview {
+    height: clamp(58px, 7vw, 92px);
+  }
+
+  .archive-file-info {
+    gap: 2px;
+    margin-top: 8px;
+    padding-right: 15px;
+    font-size: 9px;
+    line-height: 1.5;
+  }
+
+  .archive-file-info .archive-file-title {
+    font-size: 9px;
+    line-height: 1.45;
+  }
+
+  .archive-file-info .archive-file-meta,
+  .archive-file-info .archive-file-category {
+    font-size: 8px;
+  }
+
+  .archive-file-arrow {
+    right: 7px;
+    bottom: 8px;
+    font-size: 12px;
+  }
+
+  @media (hover: hover) {
+    .archive-file:hover {
+      z-index: 80;
+      transform: translate3d(0, -8px, 24px) scale(1.035);
+      box-shadow: 6px 10px 0 rgba(0, 0, 0, .13);
+    }
+  }
+}
+
+/* Medium desktop / tablet landscape */
+@media (min-width: 851px) and (max-width: 1150px) {
+  .archive-files {
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 16px 12px;
+  }
+
+  .archive-file:nth-child(4n + 1) { margin-top: 0; }
+  .archive-file:nth-child(4n + 2) { margin-top: 20px; }
+  .archive-file:nth-child(4n + 3) { margin-top: 40px; }
+  .archive-file:nth-child(4n)     { margin-top: 60px; }
+}
+
+/* Tablet: a compact, staggered overview */
+@media (min-width: 561px) and (max-width: 850px) {
+  .archive-drawer {
+    overflow: hidden;
+  }
+
+  .archive-files {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    align-items: start;
+    gap: 14px 10px;
+    padding: 24px 6px 28px;
+  }
+
+  .archive-file,
+  .archive-file + .archive-file {
+    width: 100%;
+    min-height: 0;
+    margin: 0;
+    transform: none;
+  }
+
+  .archive-file:nth-child(3n + 2) { margin-top: 16px; }
+  .archive-file:nth-child(3n)     { margin-top: 32px; }
+
+  .archive-file-tab {
+    min-width: 0;
+    max-width: calc(100% - 10px);
+    min-height: 29px;
+    margin-left: 5px;
+    padding: 4px 6px;
+    font-size: 8px;
+  }
+
+  .archive-file-body {
+    min-height: 0;
+    padding: 7px;
+  }
+
+  .archive-file-preview {
+    height: 82px;
+  }
+
+  .archive-file-info {
+    margin-top: 8px;
+    padding-right: 14px;
+    font-size: 9px;
+  }
+
+  .archive-file-info .archive-file-title {
+    font-size: 9px;
+  }
+
+  .archive-file-arrow {
+    right: 6px;
+    bottom: 7px;
+    font-size: 11px;
+  }
+}
+
+/* Mobile: keep the archive easy to read and tap */
+@media (max-width: 560px) {
+  .archive-drawer {
+    overflow: hidden;
+  }
+
+  .archive-files {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    align-items: start;
+    gap: 12px 9px;
+    padding: 20px 2px 24px;
+  }
+
+  .archive-file,
+  .archive-file + .archive-file {
+    width: 100%;
+    min-width: 0;
+    min-height: 0;
+    margin: 0;
+    transform: none;
+  }
+
+  .archive-file:nth-child(4n + 2) { margin-top: 12px; }
+  .archive-file:nth-child(4n + 3) { margin-top: 24px; }
+  .archive-file:nth-child(4n)     { margin-top: 36px; }
+
+  .archive-file-tab {
+    min-width: 0;
+    max-width: calc(100% - 8px);
+    min-height: 28px;
+    margin-left: 4px;
+    padding: 4px 6px;
+    font-size: 8px;
+  }
+
+  .archive-file-tab .archive-file-title {
+    font-size: 8px;
+  }
+
+  .archive-file-body {
+    min-height: 0;
+    padding: 7px;
+  }
+
+  .archive-file-preview {
+    height: 76px;
+  }
+
+  .archive-file-info {
+    margin-top: 7px;
+    padding-right: 12px;
+    font-size: 9px;
+  }
+
+  .archive-file-info .archive-file-title {
+    font-size: 9px;
+  }
+
+  .archive-file-arrow {
+    right: 5px;
+    bottom: 6px;
+    font-size: 11px;
+  }
+}
+
+/* Very narrow phones: preserve readable cards */
+@media (max-width: 360px) {
+  .archive-files {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 12px;
+  }
+
+  .archive-file:nth-child(n) {
+    margin-top: 0;
+  }
+
+  .archive-file-preview {
+    height: 110px;
+  }
+}
+
+/* Respect reduced-motion preferences */
+@media (prefers-reduced-motion: reduce) {
+  .archive-file,
+  .archive-file + .archive-file {
+    transition: none !important;
+  }
+}
