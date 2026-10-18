@@ -1,0 +1,62 @@
+backend:
+  name: github
+  repo: YOUR-GITHUB-USERNAME/YOUR-REPO-NAME
+  branch: main
+media_folder: images/uploads
+public_folder: images/uploads
+collections:
+  - name: portfolio
+    label: Portfolio
+    files:
+      - name: projects
+        label: Projects
+        file: data/projects.json
+        format: json
+        fields:
+          - label: Projects
+            name: projects
+            widget: list
+            label_singular: Project
+            summary: "{{fields.title}}"
+            fields:
+              - {label: Title, name: title, widget: string}
+              - label: Category
+                name: category
+                widget: relation
+                collection: portfolio
+                file: site
+                search_fields: ["categories.*"]
+                value_field: "categories.*"
+                display_fields: ["categories.*"]
+              - {label: Year, name: year, widget: string, required: false}
+              - {label: Show on home page, name: featured, widget: boolean, default: false, required: false}
+              - label: Images
+                name: images
+                widget: list
+                required: false
+                fields:
+                  - {label: Image, name: image, widget: image}
+                  - {label: Caption, name: caption, widget: string, required: false}
+              - {label: Description, name: description, widget: text, required: false}
+              - {label: My role, name: role, widget: string, required: false}
+              - {label: Process, name: process, widget: text, required: false}
+      - name: site
+        label: Site settings
+        file: data/site.json
+        format: json
+        fields:
+          - {label: Tagline, name: tagline, widget: string}
+          - {label: Hero photo, name: heroImage, widget: image, required: false}
+          - {label: Studio intro, name: intro, widget: text}
+          - {label: Email, name: email, widget: string}
+          - label: Links
+            name: links
+            widget: list
+            fields:
+              - {label: Label, name: label, widget: string}
+              - {label: URL, name: url, widget: string}
+          - label: Categories
+            name: categories
+            widget: list
+            field: {label: Category, name: category, widget: string}
+          - {label: About text, name: about, widget: text}

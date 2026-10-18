@@ -1,0 +1,25 @@
+{
+ "tagline": "Visual creative exploring design, characters, stories, and visual culture.",
+ "email": "your-email@example.com",
+ "links": [
+  {
+   "label": "Behance",
+   "url": "https://www.behance.net/habibaalba8181"
+  },
+  {
+   "label": "Instagram",
+   "url": "https://www.instagram.com/your-handle"
+  }
+ ],
+ "categories": [
+  "Graphic Design",
+  "Branding & Visual Identity",
+  "Illustration & Character Design",
+  "Comics & Visual Storytelling",
+  "Photography",
+  "Video & Motion"
+ ],
+ "about": "Placeholder: write a few warm lines about what draws you to visual work, in your own words.\n\nPlaceholder: describe how you approach characters, stories, and visual culture.\n\nPlaceholder: add anything personal you want visitors to know.",
+ "intro": "Placeholder: one or two lines introducing your studio and you as the artist.",
+ "heroImage": ""
+}

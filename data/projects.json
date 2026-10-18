@@ -1,0 +1,64 @@
+{
+ "projects": [
+  {
+   "title": "Sample poster series",
+   "category": "Graphic Design",
+   "year": "",
+   "featured": true,
+   "description": "Placeholder description. Replace it from the admin page.",
+   "role": "",
+   "process": "",
+   "images": []
+  },
+  {
+   "title": "Sample identity system",
+   "category": "Branding & Visual Identity",
+   "year": "",
+   "featured": true,
+   "description": "Placeholder description. Replace it from the admin page.",
+   "role": "",
+   "process": "",
+   "images": []
+  },
+  {
+   "title": "Sample character study",
+   "category": "Illustration & Character Design",
+   "year": "",
+   "featured": true,
+   "description": "Placeholder description. Replace it from the admin page.",
+   "role": "",
+   "process": "",
+   "images": []
+  },
+  {
+   "title": "Sample comic pages",
+   "category": "Comics & Visual Storytelling",
+   "year": "",
+   "featured": false,
+   "description": "Placeholder description. Replace it from the admin page.",
+   "role": "",
+   "process": "",
+   "images": []
+  },
+  {
+   "title": "Sample photo set",
+   "category": "Photography",
+   "year": "",
+   "featured": false,
+   "description": "Placeholder description. Replace it from the admin page.",
+   "role": "",
+   "process": "",
+   "images": []
+  },
+  {
+   "title": "Sample motion piece",
+   "category": "Video & Motion",
+   "year": "",
+   "featured": false,
+   "description": "Placeholder description. Replace it from the admin page.",
+   "role": "",
+   "process": "",
+   "images": []
+  }
+ ]
+}
