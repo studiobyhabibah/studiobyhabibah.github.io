@@ -953,259 +953,23 @@ dialog#lb::backdrop {
 /* ========================================
    HABIBAH — SUNLIT LIQUID GLASS 3D ARCHIVE
    ======================================== */
-
-.ring-archive {
-  position: relative;
-  isolation: isolate;
-  margin: 35px 0 25px;
-  padding: 18px;
-  color: var(--black);
-  background:
-    radial-gradient(ellipse at 50% 42%, rgba(255,255,255,.94), rgba(255,236,163,.43) 37%, transparent 72%),
-    linear-gradient(145deg, rgba(255,255,255,.78), rgba(244,230,165,.42), rgba(255,249,232,.78));
-  border: 1px solid rgba(255,255,255,.88);
-  border-radius: 16px;
-  box-shadow: 0 15px 42px rgba(101,71,47,.10), inset 0 1px 0 rgba(255,255,255,.96);
-  -webkit-backdrop-filter: blur(18px) saturate(140%);
-  backdrop-filter: blur(18px) saturate(140%);
-}
-
-.ring-archive:before {
-  content: "";
-  position: absolute;
-  z-index: -1;
-  top: 2%;
-  left: 18%;
-  width: 64%;
-  height: 48%;
-  pointer-events: none;
-  background: rgba(255,255,255,.55);
-  filter: blur(65px);
-}
-
-.archive-file-header {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-between;
-  gap: 16px;
-  padding: 0 2px 16px;
-  border-bottom: 1px solid rgba(101,71,47,.16);
-}
-
-.archive-file-heading {
-  display: flex;
-  flex-direction: column;
-  gap: 3px;
-}
-
-.archive-file-kicker,
-.archive-file-total span:last-child {
-  color: var(--gray);
-  font-size: 8px;
-  letter-spacing: .08em;
-}
-
-.archive-file-title-main { color: var(--brown); font-size: 12px; }
-
-.archive-file-ar {
-  margin-top: 2px;
-  color: var(--brown);
-  font-family: var(--arabic) !important;
-  font-size: 14px;
-  line-height: 1.8;
-  text-transform: none;
-}
-
-.archive-file-total {
-  display: flex;
-  flex-direction: column;
-  align-items: flex-end;
-  line-height: 1.6;
-}
-
-.archive-file-total span:first-child {
-  color: var(--brown);
-  font-size: 22px;
-  line-height: 1.2;
-}
-
-.ring-scene {
-  position: relative;
-  height: 510px;
-  margin: 0 -6px;
-  overflow: hidden;
-  perspective: 1200px;
-  perspective-origin: 50% 43%;
-  touch-action: pan-y;
-  cursor: grab;
-  user-select: none;
-  -webkit-user-select: none;
-}
-
-.ring-scene.is-dragging {
-  cursor: grabbing;
-  touch-action: none;
-}
-
-.ring-stage {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  transform-style: preserve-3d;
-}
-
-.archive-ring {
-  position: relative;
-  width: 190px;
-  height: 280px;
-  transform-style: preserve-3d;
-  will-change: transform;
-}
-
-.ring-card {
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  display: flex;
-  flex-direction: column;
-  width: 190px;
-  height: 280px;
-  padding: 7px;
-  overflow: hidden;
-  color: var(--brown);
-  background: linear-gradient(145deg, rgba(255,255,255,.97), rgba(255,249,232,.86) 60%, rgba(244,230,165,.62));
-  border: 1px solid rgba(255,255,255,.94);
-  border-radius: 12px;
-  box-shadow: 0 12px 28px rgba(101,71,47,.17), 0 3px 8px rgba(101,71,47,.08), inset 0 1px 0 #fff;
-  transform-style: preserve-3d;
-  backface-visibility: visible;
-  -webkit-backface-visibility: visible;
-  transition: box-shadow .25s ease, border-color .25s ease;
-  cursor: pointer;
-}
-
-.ring-card:hover {
-  opacity: 1;
-  box-shadow: 0 18px 38px rgba(101,71,47,.22), 0 4px 12px rgba(255,255,255,.6), inset 0 1px 0 #fff;
-}
-
-.ring-card-art {
-  position: relative;
-  display: block;
-  flex: 1;
-  min-height: 0;
-  overflow: hidden;
-  background: linear-gradient(145deg, rgba(255,255,255,.8), rgba(244,230,165,.55));
-  border: 1px solid rgba(101,71,47,.10);
-  border-radius: 7px;
-}
-
-.ring-card-art img,
-.ring-card-art svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
-
-.ring-card-art img { pointer-events: none; }
-
-.ring-card-caption {
-  display: flex;
-  flex-direction: column;
-  gap: 2px;
-  padding: 8px 4px 4px;
-}
-
-.ring-card-number {
-  color: #978267;
-  font-size: 8px;
-  letter-spacing: .04em;
-}
-
-.ring-card-title {
-  color: var(--brown);
-  font-size: 11px;
-  line-height: 1.5;
-}
-
-.ring-card-category {
-  color: #8a775b;
-  font-size: 9px;
-  line-height: 1.5;
-}
-
-.ring-card-shine {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-  background: linear-gradient(125deg, rgba(255,255,255,.28), transparent 25%, transparent 72%, rgba(255,255,255,.20));
-}
-
-.ring-instructions {
-  position: absolute;
-  right: 8px;
-  bottom: 10px;
-  left: 8px;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  color: #8a775b;
-  font-size: 8px;
-  letter-spacing: .06em;
-  pointer-events: none;
-}
-
-.ring-archive .archive-drawer-bottom {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 10px;
-  padding: 14px 2px 2px;
-  border-top: 1px solid rgba(101,71,47,.16);
-  color: #8a775b;
-  font-size: 8px;
-  letter-spacing: .04em;
-}
-
-.work-page .filters { margin-bottom: 24px; }
-.empty-state { padding: 25px 0; color: var(--gray); }
-
-@media (max-width: 850px) {
-  .ring-scene { height: 445px; perspective: 1000px; }
-}
-
-@media (max-width: 560px) {
-  .ring-archive { padding: 12px; border-radius: 14px; }
-  .ring-scene { height: 355px; margin: 0 -4px; perspective: 850px; }
-  .archive-ring { width: 132px; height: 205px; }
-  .ring-card { width: 132px; height: 205px; padding: 5px; border-radius: 9px; }
-  .ring-card-caption { padding: 6px 3px 3px; }
-  .ring-card-number { font-size: 7px; }
-  .ring-card-title { font-size: 9px; }
-  .ring-card-category { font-size: 8px; }
-  .ring-instructions { font-size: 7px; }
-  .archive-file-total span:first-child { font-size: 19px; }
-}
-
-@media (prefers-reduced-motion: reduce) {
-  .ring-card { transition: none; }
-}
+.ring-archive{position:relative;isolation:isolate;overflow:hidden;margin:35px 0 25px;padding:18px;color:var(--black);background:radial-gradient(ellipse at 50% 42%,rgba(255,255,255,.94),rgba(255,236,163,.43) 37%,transparent 72%),linear-gradient(145deg,rgba(255,255,255,.78),rgba(244,230,165,.42),rgba(255,249,232,.78));border:1px solid rgba(255,255,255,.88);border-radius:16px;box-shadow:0 15px 42px rgba(101,71,47,.10),inset 0 1px 0 rgba(255,255,255,.96);-webkit-backdrop-filter:blur(18px) saturate(140%);backdrop-filter:blur(18px) saturate(140%)}
+.ring-archive:before{content:"";position:absolute;z-index:-1;top:2%;left:18%;width:64%;height:48%;pointer-events:none;background:rgba(255,255,255,.55);filter:blur(65px)}
+.archive-file-header{position:relative;z-index:2;display:flex;align-items:flex-start;justify-content:space-between;gap:16px;padding:0 2px 16px;border-bottom:1px solid rgba(101,71,47,.16)}
+.archive-file-heading{display:flex;flex-direction:column;gap:3px}.archive-file-kicker,.archive-file-total span:last-child{color:var(--gray);font-size:8px;letter-spacing:.08em}.archive-file-title-main{color:var(--brown);font-size:12px}.archive-file-ar{margin-top:2px;color:var(--brown);font-family:var(--arabic)!important;font-size:14px;line-height:1.8;text-transform:none}.archive-file-total{display:flex;flex-direction:column;align-items:flex-end;line-height:1.6}.archive-file-total span:first-child{color:var(--brown);font-size:22px;line-height:1.2}
+.ring-scene{position:relative;height:510px;margin:0 -6px;overflow:hidden;perspective:1200px;perspective-origin:50% 43%;touch-action:pan-y;cursor:grab;user-select:none;-webkit-user-select:none}.ring-scene.is-dragging{cursor:grabbing;touch-action:none}.ring-stage{position:absolute;inset:0;display:grid;place-items:center;transform-style:preserve-3d}.archive-ring{position:relative;width:190px;height:280px;transform-style:preserve-3d;will-change:transform}
+.ring-card{position:absolute;top:50%;left:50%;display:flex;flex-direction:column;width:190px;height:280px;padding:7px;overflow:hidden;color:var(--brown);background:linear-gradient(145deg,rgba(255,255,255,.97),rgba(255,249,232,.86) 60%,rgba(244,230,165,.62));border:1px solid rgba(255,255,255,.94);border-radius:12px;box-shadow:0 12px 28px rgba(101,71,47,.17),0 3px 8px rgba(101,71,47,.08),inset 0 1px 0 #fff;transform-style:preserve-3d;backface-visibility:visible;-webkit-backface-visibility:visible;transition:box-shadow .25s ease,border-color .25s ease;cursor:pointer}.ring-card:hover{opacity:1;box-shadow:0 18px 38px rgba(101,71,47,.22),0 4px 12px rgba(255,255,255,.6),inset 0 1px 0 #fff}
+.ring-card-art{position:relative;display:block;flex:1;min-height:0;overflow:hidden;background:linear-gradient(145deg,rgba(255,255,255,.8),rgba(244,230,165,.55));border:1px solid rgba(101,71,47,.10);border-radius:7px}.ring-card-art img,.ring-card-art svg{display:block;width:100%;height:100%;object-fit:cover}.ring-card-art img{pointer-events:none}.ring-card-caption{display:flex;flex-direction:column;gap:2px;padding:8px 4px 4px}.ring-card-number{color:#978267;font-size:8px;letter-spacing:.04em}.ring-card-title{color:var(--brown);font-size:11px;line-height:1.5}.ring-card-category{color:#8a775b;font-size:9px;line-height:1.5}.ring-card-shine{position:absolute;inset:0;border-radius:inherit;pointer-events:none;background:linear-gradient(125deg,rgba(255,255,255,.28),transparent 25%,transparent 72%,rgba(255,255,255,.20))}
+.ring-instructions{position:absolute;right:8px;bottom:10px;left:8px;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#8a775b;font-size:8px;letter-spacing:.06em;pointer-events:none}.ring-archive .archive-drawer-bottom{position:relative;z-index:2;display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:10px;padding:14px 2px 2px;border-top:1px solid rgba(101,71,47,.16);color:#8a775b;font-size:8px;letter-spacing:.04em}.work-page .filters{margin-bottom:24px}.empty-state{padding:25px 0;color:var(--gray)}
+@media(max-width:850px){.ring-scene{height:445px;perspective:1000px}}
+@media(max-width:560px){.ring-archive{padding:12px;border-radius:14px}.ring-scene{height:355px;margin:0 -4px;perspective:850px}.archive-ring{width:132px;height:205px}.ring-card{width:132px;height:205px;padding:5px;border-radius:9px}.ring-card-caption{padding:6px 3px 3px}.ring-card-number{font-size:7px}.ring-card-title{font-size:9px}.ring-card-category{font-size:8px}.ring-instructions{font-size:7px}.archive-file-total span:first-child{font-size:19px}}
+@media(prefers-reduced-motion:reduce){.ring-card{transition:none}}
 
 /* ============================================
    RESTORED 3D ARCHIVE — SUNLIT LIQUID GLASS
    Keeps the original portfolio styles above,
    while applying the latest archive appearance.
    ============================================ */
-
 :root {
   --archive-ink: #211a14;
   --archive-brown: #65472f;
@@ -1231,7 +995,6 @@ dialog#lb::backdrop {
     linear-gradient(135deg, rgba(255,255,255,.84), rgba(255,249,232,.68) 46%, rgba(244,230,165,.26));
   box-shadow: 0 26px 70px rgba(101,71,47,.10), 0 8px 24px rgba(101,71,47,.06), inset 0 1px 0 rgba(255,255,255,.98), inset 0 -1px 0 rgba(244,230,165,.28);
 }
-
 .ring-archive::before,
 .ring-archive::after {
   content: "";
@@ -1240,22 +1003,14 @@ dialog#lb::backdrop {
   pointer-events: none;
   border-radius: 50%;
 }
-
 .ring-archive::before {
-  top: -22%;
-  left: 4%;
-  width: 78%;
-  height: 70%;
+  top: -22%; left: 4%; width: 78%; height: 70%;
   background: radial-gradient(ellipse, rgba(255,255,255,.96) 0%, rgba(255,246,207,.48) 34%, rgba(255,232,153,.15) 58%, transparent 76%);
   filter: blur(36px);
   opacity: .95;
 }
-
 .ring-archive::after {
-  right: -18%;
-  bottom: -32%;
-  width: 66%;
-  height: 75%;
+  right: -18%; bottom: -32%; width: 66%; height: 75%;
   background: radial-gradient(ellipse, rgba(255,220,125,.30), rgba(255,249,232,.14) 46%, transparent 76%);
   filter: blur(44px);
 }
@@ -1270,13 +1025,7 @@ dialog#lb::backdrop {
   padding: 4px 4px 20px;
   border-bottom: 1px solid rgba(101,71,47,.14);
 }
-
-.ring-archive .archive-file-heading {
-  display: flex;
-  flex-direction: column;
-  gap: 5px;
-}
-
+.ring-archive .archive-file-heading { display: flex; flex-direction: column; gap: 5px; }
 .ring-archive .archive-file-kicker {
   color: var(--archive-muted);
   font-size: 10px;
@@ -1284,7 +1033,6 @@ dialog#lb::backdrop {
   letter-spacing: .16em;
   text-transform: uppercase;
 }
-
 .ring-archive .archive-file-title-main {
   color: var(--archive-ink);
   font-family: var(--serif);
@@ -1292,7 +1040,6 @@ dialog#lb::backdrop {
   line-height: 1.15;
   letter-spacing: -.045em;
 }
-
 .ring-archive .archive-file-ar {
   color: var(--archive-brown);
   font-family: var(--arabic) !important;
@@ -1300,7 +1047,6 @@ dialog#lb::backdrop {
   line-height: 1.8;
   opacity: .82;
 }
-
 .ring-archive .archive-file-total {
   display: flex;
   flex-shrink: 0;
@@ -1312,7 +1058,6 @@ dialog#lb::backdrop {
   letter-spacing: .1em;
   text-transform: uppercase;
 }
-
 .ring-archive .archive-file-total span:first-child {
   color: var(--archive-brown);
   font-family: Georgia, serif;
@@ -1334,26 +1079,20 @@ dialog#lb::backdrop {
   cursor: grab;
   -webkit-tap-highlight-color: transparent;
 }
-
 .ring-scene.is-dragging { cursor: grabbing; }
-
 .ring-stage {
   position: absolute;
   inset: 0;
-  width: 100%;
-  height: 100%;
+  width: 100%; height: 100%;
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
   user-select: none;
   -webkit-user-select: none;
 }
-
 .archive-ring {
   position: absolute;
-  top: 50%;
-  left: 50%;
-  width: 0;
-  height: 0;
+  top: 50%; left: 50%;
+  width: 0; height: 0;
   transform-style: preserve-3d;
   -webkit-transform-style: preserve-3d;
   will-change: transform;
@@ -1361,8 +1100,7 @@ dialog#lb::backdrop {
 
 .ring-archive .ring-card {
   position: absolute;
-  top: 0;
-  left: 0;
+  top: 0; left: 0;
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -1385,7 +1123,6 @@ dialog#lb::backdrop {
   transform-style: preserve-3d;
   transition: box-shadow .35s ease, border-color .35s ease, background .35s ease, opacity .35s ease;
 }
-
 .ring-archive .ring-card::before {
   content: "";
   position: absolute;
@@ -1397,7 +1134,6 @@ dialog#lb::backdrop {
   opacity: .72;
   transition: opacity .35s ease;
 }
-
 .ring-archive .ring-card::after {
   content: "";
   position: absolute;
@@ -1408,7 +1144,6 @@ dialog#lb::backdrop {
   pointer-events: none;
   box-shadow: inset 0 1px 2px rgba(255,255,255,.66), inset 0 -1px 2px rgba(180,142,73,.08);
 }
-
 .ring-card-art {
   position: relative;
   display: block;
@@ -1422,23 +1157,10 @@ dialog#lb::backdrop {
   background: radial-gradient(ellipse at 40% 20%, rgba(255,255,255,.92), rgba(255,248,219,.60) 55%, rgba(244,230,165,.25));
   box-shadow: 0 2px 8px rgba(101,71,47,.08), inset 0 1px 0 rgba(255,255,255,.88);
 }
-
 .ring-card-art img,
-.ring-card-art svg {
-  display: block;
-  width: 100%;
-  height: 100%;
-}
-
-.ring-card-art img {
-  object-fit: cover;
-  object-position: center;
-  user-select: none;
-  -webkit-user-drag: none;
-}
-
+.ring-card-art svg { display: block; width: 100%; height: 100%; }
+.ring-card-art img { object-fit: cover; object-position: center; user-select: none; -webkit-user-drag: none; }
 .ring-card-art svg { object-fit: contain; }
-
 .ring-card-caption {
   position: relative;
   z-index: 7;
@@ -1450,198 +1172,111 @@ dialog#lb::backdrop {
   min-width: 0;
   padding: 2px 2px 3px;
 }
-
-.ring-card-number {
-  color: var(--archive-muted);
-  font-family: Georgia, serif;
-  font-size: 10px;
-  letter-spacing: .08em;
-}
-
+.ring-card-number { color: var(--archive-muted); font-family: Georgia, serif; font-size: 10px; letter-spacing: .08em; }
 .ring-card-title {
-  display: block;
-  width: 100%;
-  overflow: hidden;
-  color: var(--archive-brown);
-  font-family: var(--serif);
-  font-size: 13px;
-  font-weight: 500;
-  line-height: 1.25;
-  text-overflow: ellipsis;
-  white-space: nowrap;
+  display: block; width: 100%; overflow: hidden;
+  color: var(--archive-brown); font-family: var(--serif);
+  font-size: 13px; font-weight: 500; line-height: 1.25;
+  text-overflow: ellipsis; white-space: nowrap;
 }
-
-.ring-card-category {
-  color: var(--archive-muted);
-  font-size: 9px;
-  letter-spacing: .08em;
-  line-height: 1.3;
-  text-transform: uppercase;
-}
-
-.ring-card-shine {
-  position: absolute;
-  inset: 0;
-  border-radius: inherit;
-  pointer-events: none;
-}
-
+.ring-card-category { color: var(--archive-muted); font-size: 9px; letter-spacing: .08em; line-height: 1.3; text-transform: uppercase; }
+.ring-card-shine { position: absolute; inset: 0; border-radius: inherit; pointer-events: none; }
 @media (hover: hover) and (pointer: fine) {
   .ring-archive .ring-card:hover {
     border-color: #fff;
     box-shadow: 0 30px 62px rgba(72,48,29,.22), 0 8px 24px rgba(255,255,255,.66), 0 0 28px rgba(255,232,153,.24), inset 0 1px 0 #fff;
   }
-
   .ring-archive .ring-card:hover::before { opacity: 1; }
-
-  .ring-archive .ring-card:hover .ring-card-art {
-    box-shadow: 0 6px 18px rgba(101,71,47,.13), inset 0 1px 0 #fff;
-  }
+  .ring-archive .ring-card:hover .ring-card-art { box-shadow: 0 6px 18px rgba(101,71,47,.13), inset 0 1px 0 #fff; }
 }
-
 .ring-instructions {
   position: absolute;
   z-index: 10;
-  left: 50%;
-  bottom: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  width: max-content;
-  max-width: calc(100% - 24px);
+  left: 50%; bottom: 12px;
+  display: flex; align-items: center; justify-content: center;
+  width: max-content; max-width: calc(100% - 24px);
   padding: 9px 15px;
   transform: translateX(-50%);
   color: rgba(101,71,47,.76);
-  font-size: 9px;
-  letter-spacing: .12em;
-  line-height: 1.4;
-  text-align: center;
-  text-transform: uppercase;
-  border: 1px solid rgba(255,255,255,.9);
-  border-radius: 999px;
+  font-size: 9px; letter-spacing: .12em; line-height: 1.4;
+  text-align: center; text-transform: uppercase;
+  border: 1px solid rgba(255,255,255,.9); border-radius: 999px;
   background: rgba(255,255,255,.52);
   box-shadow: 0 4px 14px rgba(101,71,47,.06), inset 0 1px 0 rgba(255,255,255,.95);
   -webkit-backdrop-filter: blur(12px) saturate(130%);
   backdrop-filter: blur(12px) saturate(130%);
   pointer-events: none;
 }
-
 .ring-archive .archive-drawer-bottom {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  padding: 15px 4px 2px;
+  position: relative; z-index: 2;
+  display: flex; align-items: center; justify-content: space-between;
+  gap: 12px; padding: 15px 4px 2px;
   border-top: 1px solid rgba(101,71,47,.12);
-  color: var(--archive-muted);
-  font-size: 9px;
-  letter-spacing: .1em;
-  line-height: 1.5;
-  text-transform: uppercase;
+  color: var(--archive-muted); font-size: 9px; letter-spacing: .1em; line-height: 1.5; text-transform: uppercase;
 }
-
 .ring-archive .archive-heading { margin: 32px 0 20px; }
 .ring-archive .archive-heading h2 { margin: 0; color: var(--archive-ink); }
 .ring-archive .archive-heading .translation { display: block; margin-top: 6px; color: var(--archive-brown); }
-
-.ring-archive .archive-heading > p {
-  max-width: 240px;
-  margin: 0;
-  color: var(--archive-muted);
-  font-size: 12px;
-  line-height: 1.7;
-  text-align: right;
-}
-
-.ring-archive .filters {
-  display: flex;
-  flex-wrap: wrap;
-  align-items: center;
-  gap: 8px;
-  margin: 20px 0;
-}
-
+.ring-archive .archive-heading > p { max-width: 240px; margin: 0; color: var(--archive-muted); font-size: 12px; line-height: 1.7; text-align: right; }
+.ring-archive .filters { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; margin: 20px 0; }
 .ring-archive .filters button {
-  padding: 9px 14px;
-  color: var(--archive-brown);
-  font: inherit;
-  font-size: 11px;
-  border: 1px solid rgba(255,255,255,.9);
-  border-radius: 999px;
-  background: rgba(255,255,255,.58);
-  box-shadow: 0 4px 12px rgba(101,71,47,.05), inset 0 1px 0 #fff;
-  cursor: pointer;
-  transition: background .25s ease, box-shadow .25s ease, border-color .25s ease;
+  padding: 9px 14px; color: var(--archive-brown); font: inherit; font-size: 11px;
+  border: 1px solid rgba(255,255,255,.9); border-radius: 999px;
+  background: rgba(255,255,255,.58); box-shadow: 0 4px 12px rgba(101,71,47,.05), inset 0 1px 0 #fff;
+  cursor: pointer; transition: background .25s ease, box-shadow .25s ease, border-color .25s ease;
 }
-
-.ring-archive .filters button[aria-pressed="true"] {
-  color: var(--archive-ivory);
-  border-color: var(--archive-brown);
-  background: var(--archive-brown);
-  box-shadow: 0 5px 14px rgba(101,71,47,.16);
-}
-
-.ring-archive .empty-state {
-  padding: 30px 0;
-  color: var(--archive-muted);
-}
+.ring-archive .filters button[aria-pressed="true"] { color: var(--archive-ivory); border-color: var(--archive-brown); background: var(--archive-brown); box-shadow: 0 5px 14px rgba(101,71,47,.16); }
+.ring-archive .empty-state { padding: 30px 0; color: var(--archive-muted); }
 
 @media (max-width: 850px) {
   .ring-scene { height: 445px; perspective: 1000px; }
 }
-
 @media (max-width: 560px) {
-  .ring-archive {
-    margin: 22px auto;
-    padding: 18px 10px 14px;
-    border-radius: 17px;
-  }
-
+  .ring-archive { margin: 22px auto; padding: 18px 10px 14px; border-radius: 17px; }
   .ring-archive .archive-file-header { gap: 10px; padding-bottom: 15px; }
   .ring-archive .archive-file-title-main { font-size: 22px; }
   .ring-archive .archive-file-kicker { font-size: 8px; }
   .ring-archive .archive-file-total span:first-child { font-size: 21px; }
-
-  .ring-scene {
-    height: 390px;
-    min-height: 350px;
-    margin-top: 4px;
-    perspective: 900px;
-  }
-
-  .ring-archive .ring-card {
-    width: 132px;
-    height: 228px;
-    padding: 8px;
-    gap: 8px;
-    border-radius: 10px;
-    box-shadow: 0 14px 30px rgba(72,48,29,.16), 0 4px 10px rgba(101,71,47,.08), inset 0 1px 0 #fff;
-  }
-
+  .ring-scene { height: 390px; min-height: 350px; margin-top: 4px; perspective: 900px; }
+  .ring-archive .ring-card { width: 132px; height: 228px; padding: 8px; gap: 8px; border-radius: 10px; box-shadow: 0 14px 30px rgba(72,48,29,.16), 0 4px 10px rgba(101,71,47,.08), inset 0 1px 0 #fff; }
   .ring-archive .ring-card::after { inset: 2px; border-radius: 8px; }
   .ring-card-title { font-size: 12px; }
   .ring-card-category { font-size: 8px; }
   .ring-instructions { bottom: 9px; padding: 8px 12px; font-size: 8px; }
   .ring-archive .archive-drawer-bottom { gap: 8px; font-size: 8px; }
-
-  .ring-archive .archive-heading {
-    align-items: flex-start;
-    flex-direction: column;
-    gap: 8px;
-  }
-
+  .ring-archive .archive-heading { align-items: flex-start; flex-direction: column; gap: 8px; }
   .ring-archive .archive-heading > p { max-width: none; text-align: left; }
   .ring-archive::before { filter: blur(26px); }
   .ring-archive::after { filter: blur(30px); }
 }
-
 @media (prefers-reduced-motion: reduce) {
   .ring-archive .ring-card,
   .ring-archive .ring-card::before,
   .ring-card-art,
-  .ring-archive .filters button {
-    transition: none !important;
-  }
+  .ring-archive .filters button { transition: none !important; }
+}
+
+
+/* ARCHIVE INTERACTION PATCH — keep the ring clickable and remove helper labels */
+.ring-scene,
+.ring-stage,
+.archive-ring {
+  pointer-events: auto;
+}
+.ring-card {
+  pointer-events: auto;
+  cursor: pointer;
+  -webkit-user-select: none;
+  user-select: none;
+}
+.ring-card img,
+.ring-card svg,
+.ring-card-art,
+.ring-card-caption,
+.ring-card-shine {
+  pointer-events: none;
+}
+.ring-instructions,
+.ring-archive > .archive-drawer-bottom {
+  display: none !important;
 }
