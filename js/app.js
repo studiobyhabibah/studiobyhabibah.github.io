@@ -352,7 +352,7 @@
 
   function renderFooter() {
     foot.innerHTML = '<div class="bar">' +
-      '<a class="big" href="#/">حبيبه</a>' +
+      '<a class="big" href="#/">Habibah</a>' +
       '<a class="nav-label" href="#/work">work<span class="translation" lang="ar" dir="rtl">الأَعْمَال</span></a>' +
       '<a class="nav-label" href="#/about">about<span class="translation" lang="ar" dir="rtl">مَنْ أَنَا</span></a>' +
       '<a class="nav-label" href="#/contact">contact<span class="translation" lang="ar" dir="rtl">تَوَاصُل</span></a>' +
