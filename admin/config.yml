@@ -1,7 +1,6 @@
 backend:
   name: github
-  repo: YOUR-GITHUB-USERNAME/YOUR-REPO-NAME
-  branch: main
+repo: studiobyhabibah/studiobyhabibah.github.io  branch: main
 media_folder: images/uploads
 public_folder: images/uploads
 collections:
