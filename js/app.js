@@ -186,7 +186,7 @@
 
   function hero() {
     return '<section class="intro"><div class="intro-name">' +
-      '<h1>' + esc(S.name || 'حبيبه') + '</h1>' +
+      '<h1>حبيبه</h1>' +
       '<p class="intro-title">' + esc(S.title || 'visual creative') + '</p>' +
       '<span class="translation" lang="ar" dir="rtl">مُبْدِعَةٌ بَصَرِيَّة</span>' +
       '</div><p class="intro-description">' +
@@ -304,7 +304,7 @@
 
     if (!found) {
       return '<section class="about"><h1>project not found</h1>' +
-        '<a href="#/work">← back to work</a></section>';
+        '<a href="#/work">← back to archive</a></section>';
     }
 
     var p = found[0];
