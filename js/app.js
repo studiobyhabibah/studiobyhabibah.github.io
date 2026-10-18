@@ -1,906 +1,858 @@
 (function () {
   'use strict';
 
-  /* ========================================
-     HABIBAH — PORTFOLIO JAVASCRIPT
-     Archive + Filters + Project Pages
-     + Image Viewer + Safe Data Loading
-     ======================================== */
+  var app = document.getElementById('app');
+  var foot = document.getElementById('foot');
+  var lb = document.getElementById('lb');
+  var lbc = document.getElementById('lbc');
 
-  function init() {
-    var app = document.getElementById('app');
-    var foot = document.getElementById('foot');
-    var lb = document.getElementById('lb');
-    var lbc = document.getElementById('lbc');
+  var S = {};
+  var P = [];
+  var currentFilter = 'all';
+  var ringFrame = 0;
+  var ringCleanup = null;
 
-    var S = null;
-    var P = [];
+  function esc(value) {
+    return String(value == null ? '' : value).replace(/[&<>"']/g, function (c) {
+      return {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#39;'
+      }[c];
+    });
+  }
 
-    var tones = ['olive', 'avo', 'blue', 'yellow', 'brown', 'pink'];
-    var acc = ['pink', 'blue', 'yellow', 'avo'];
+  function slug(value) {
+    return String(value || 'project')
+      .toLowerCase()
+      .normalize('NFD')
+      .replace(/[\u0300-\u036f]/g, '')
+      .replace(/[^a-z0-9]+/g, '-')
+      .replace(/^-|-$/g, '') || 'project';
+  }
 
-    /* ========================================
-       HELPERS
-       ======================================== */
+  function pad(value) {
+    return String(value).padStart(2, '0');
+  }
 
-    function esc(value) {
-      return String(value == null ? '' : value).replace(
-        /[&<>"']/g,
-        function (char) {
-          return {
-            '&': '&amp;',
-            '<': '&lt;',
-            '>': '&gt;',
-            '"': '&quot;',
-            "'": '&#39;'
-          }[char];
-        }
-      );
+  function codeNumber(value) {
+    return 'work_' + pad(value);
+  }
+
+  function pid(project, index) {
+    return slug(project.id || project.title || project.name) + '-' + index;
+  }
+
+  function plain(value) {
+    if (Array.isArray(value)) {
+      return value.map(plain).filter(Boolean).join('\n\n');
     }
 
-    function slug(value) {
-      return String(value || '')
-        .toLowerCase()
-        .replace(/[^a-z0-9]+/g, '-')
-        .replace(/^-+|-+$/g, '');
+    if (value && typeof value === 'object') {
+      return value.text || value.description || value.title || '';
     }
 
-    function pid(project, index) {
-      return (index + 1) + '-' + slug(project.title);
+    return value == null ? '' : String(value);
+  }
+
+  function paragraphs(value) {
+    var text = plain(value).trim();
+
+    return text
+      ? text.split(/\n{2,}/).map(function (p) {
+          return '<p>' + esc(p).replace(/\n/g, '<br>') + '</p>';
+        }).join('')
+      : '';
+  }
+
+  function projectImages(project) {
+    var images = project.images || project.gallery || project.artworks || [];
+
+    if (!Array.isArray(images)) {
+      images = [];
     }
 
-    function paras(value) {
-      return String(value || '')
-        .split(/\n\s*\n/)
-        .filter(function (paragraph) {
-          return paragraph.trim().length > 0;
-        })
-        .map(function (paragraph) {
-          return '<p>' + esc(paragraph) + '</p>';
-        })
-        .join('');
+    if (!images.length && (project.image || project.cover)) {
+      images = [project.image || project.cover];
     }
 
-    function pad(number) {
-      return number < 10 ? '0' + number : String(number);
+    return images;
+  }
+
+  function src(project, index) {
+    var entry = projectImages(project)[index];
+
+    if (entry && typeof entry === 'object') {
+      return entry.image || entry.src || entry.url || entry.path || '';
     }
 
-    function circ(number) {
-      return number <= 20
-        ? String.fromCharCode(9311 + number)
-        : String(number);
+    return entry || '';
+  }
+
+  function imageCaption(project, index) {
+    var entry = projectImages(project)[index];
+
+    return entry && typeof entry === 'object'
+      ? entry.caption || entry.alt || project.title || 'artwork'
+      : project.title || 'artwork';
+  }
+
+  function placeholder(label) {
+    return '<svg viewBox="0 0 600 750" role="img" aria-label="' +
+      esc(label || 'artwork preview') +
+      '" xmlns="http://www.w3.org/2000/svg">' +
+      '<defs><linearGradient id="paper" x1="0" y1="0" x2="1" y2="1">' +
+      '<stop stop-color="#fffefa"/>' +
+      '<stop offset="1" stop-color="#f4e6a5"/>' +
+      '</linearGradient></defs>' +
+      '<rect width="600" height="750" fill="url(#paper)"/>' +
+      '<circle cx="420" cy="180" r="115" fill="#fff" fill-opacity=".6"/>' +
+      '<path d="M0 570 Q160 490 300 580 T600 540 V750 H0Z" fill="#65472f" fill-opacity=".10"/>' +
+      '<text x="300" y="365" text-anchor="middle" fill="#65472f" font-family="Georgia,serif" font-size="24">' +
+      esc(label || 'visual archive') +
+      '</text></svg>';
+  }
+
+  function art(project, index) {
+    var image = src(project, index || 0);
+
+    return image
+      ? '<img src="' + esc(image) + '" alt="' +
+          esc(imageCaption(project, index || 0)) +
+          '" loading="lazy">'
+      : placeholder(project.title || project.name);
+  }
+
+  function items(category) {
+    return P.map(function (project, index) {
+      return [project, index];
+    }).filter(function (item) {
+      return !category ||
+        category === 'all' ||
+        String(item[0].category || 'other').toLowerCase() ===
+          String(category).toLowerCase();
+    });
+  }
+
+  function archiveHeading() {
+    return '<div class="archive-heading">' +
+      '<div><h2>the archive</h2>' +
+      '<span class="translation" lang="ar" dir="rtl">أَرْشِيفُ الْأَعْمَالِ</span></div>' +
+      '<p>a collection of visual experiments and projects</p>' +
+      '</div>';
+  }
+
+  function lib(list) {
+    if (!list.length) {
+      return '<p class="txt empty-state">no projects in this category yet.</p>';
     }
 
-    function src(project, index) {
-      var entry = project.images && project.images[index];
+    var cards = list.map(function (item) {
+      var p = item[0];
+      var i = item[1];
 
-      entry = entry && (entry.image || entry);
+      return '<a class="ring-card" href="#/work/' +
+        esc(pid(p, i)) +
+        '" aria-label="open ' +
+        esc(p.title || p.name || 'project') +
+        '">' +
+        '<span class="ring-card-art">' + art(p, 0) + '</span>' +
+        '<span class="ring-card-caption">' +
+        '<span class="ring-card-number">' + esc(codeNumber(i + 1)) + '</span>' +
+        '<span class="ring-card-title">' + esc(p.title || p.name || 'untitled project') + '</span>' +
+        '<span class="ring-card-category">' + esc(p.category || 'project') + '</span>' +
+        '</span>' +
+        '<span class="ring-card-shine" aria-hidden="true"></span>' +
+        '</a>';
+    }).join('');
 
-      if (!entry || typeof entry !== 'string') {
-        return '';
+    return '<section class="ring-archive" aria-label="project archive">' +
+      '<div class="archive-file-header">' +
+      '<div class="archive-file-heading">' +
+      '<span class="archive-file-kicker">visual index / 2026</span>' +
+      '<span class="archive-file-title-main">habibah / archive</span>' +
+      '<span class="archive-file-ar" lang="ar" dir="rtl">أَرْشِيفُ الْأَعْمَالِ</span>' +
+      '</div>' +
+      '<div class="archive-file-total">' +
+      '<span>' + pad(list.length) + '</span>' +
+      '<span>projects</span>' +
+      '</div>' +
+      '</div>' +
+      '<div class="ring-scene" aria-label="move your mouse or swipe to rotate the 3D project archive">' +
+      '<div class="ring-stage">' +
+      '<div class="archive-ring">' + cards + '</div>' +
+      '</div>' +
+      '<div class="ring-instructions"><span>move your mouse to explore</span></div>' +
+      '</div>' +
+      '<div class="archive-drawer-bottom">' +
+      '<span>independent visual archive</span>' +
+      '<span>3d / project index</span>' +
+      '</div>' +
+      '</section>';
+  }
+
+  function hero() {
+    return '<section class="intro">' +
+      '<div class="intro-name">' +
+      '<h1>' + esc(S.name || 'habibah') + '</h1>' +
+      '<p class="intro-title">' + esc(S.title || 'visual creative') + '</p>' +
+      '<span class="translation" lang="ar" dir="rtl">مُبْدِعَةٌ بَصَرِيَّة</span>' +
+      '</div>' +
+      '<p class="intro-description">' +
+      esc(plain(S.intro || S.description || 'exploring design, characters, stories, and visual culture.')) +
+      '</p>' +
+      '</section>';
+  }
+
+  function categories() {
+    var seen = {};
+
+    P.forEach(function (p) {
+      var c = String(p.category || 'other').trim();
+
+      if (c) {
+        seen[c.toLowerCase()] = c;
       }
-
-      return entry.replace(/^\.\//, '').replace(/^\/+/, '');
-    }
-
-    function cap(project, index) {
-      var entry = project.images && project.images[index];
-
-      return entry && typeof entry === 'object'
-        ? entry.caption || ''
-        : '';
-    }
-
-    function getCategory(project) {
-      return String(project.category || 'Uncategorized');
-    }
-
-    /* ========================================
-       PLACEHOLDER ARTWORK
-       ======================================== */
-
-    function ph(project, index, imageIndex) {
-      var n = index + imageIndex;
-
-      var shapes = [
-        '<path d="M90 420V230a110 110 0 0 1 220 0v190z"/>',
-
-        '<circle cx="200" cy="240" r="120"/>',
-
-        '<path d="M80 300c-20-90 60-170 150-150s110 120 60 200-190 60-210-50z"/>',
-
-        '<rect x="90" y="130" width="50" height="290"/>' +
-        '<rect x="175" y="190" width="50" height="230"/>' +
-        '<rect x="260" y="100" width="50" height="320"/>'
-      ];
-
-      return (
-        '<svg viewBox="0 0 400 500" role="img" aria-label="' +
-        esc(project.title) +
-        '" preserveAspectRatio="xMidYMid slice">' +
-
-          '<rect width="400" height="500" style="fill:var(--' +
-            tones[n % tones.length] +
-          ')"/>' +
-
-          '<g style="fill:var(--' +
-            acc[(n + 1) % acc.length] +
-          ')" transform="rotate(' +
-            (n * 7 - 6) +
-            ' 200 250)">' +
-            shapes[n % shapes.length] +
-          '</g>' +
-
-          '<circle cx="320" cy="90" r="22" style="fill:var(--soft)"/>' +
-
-        '</svg>'
-      );
-    }
-
-    function art(project, index, imageIndex) {
-      var imageSource = src(project, imageIndex);
-
-      if (!imageSource) {
-        return ph(project, index, imageIndex);
-      }
-
-      return (
-        '<img src="' + esc(imageSource) +
-        '" alt="' + esc(project.title) +
-        ', image ' + (imageIndex + 1) +
-        '" loading="lazy" decoding="async" ' +
-        'onerror="this.onerror=null;this.style.display=\'none\'">'
-      );
-    }
-
-    /* ========================================
-       PROJECT FILTERING
-       ======================================== */
-
-    function items(category) {
-      return P.map(function (project, index) {
-        return [project, index];
-      }).filter(function (item) {
-        return (
-          !category ||
-          category === 'All' ||
-          getCategory(item[0]).toLowerCase() ===
-            String(category).toLowerCase()
-        );
-      });
-    }
-
-    /* ========================================
-       ACCORDION ARCHIVE
-       ======================================== */
-
-    function lib(list) {
-      if (!list.length) {
-        return '<p class="txt">No projects in this category yet.</p>';
-      }
-
-      var groups = [];
-      var groupMap = Object.create(null);
-
-      list.forEach(function (item) {
-        var project = item[0];
-        var category = getCategory(project);
-        var key = category.toLowerCase();
-
-        if (!groupMap[key]) {
-          groupMap[key] = {
-            name: category,
-            projects: []
-          };
-
-          groups.push(groupMap[key]);
-        }
-
-        groupMap[key].projects.push(item);
-      });
-
-      var sections = groups.map(function (group, groupIndex) {
-        var projects = group.projects.map(function (item) {
-          var project = item[0];
-          var index = item[1];
-
-          return (
-            '<a class="folder-project" href="#/work/' +
-              pid(project, index) +
-              '" aria-label="' + esc(project.title) + '">' +
-
-              '<span class="folder-project-art">' +
-                art(project, index, 0) +
-              '</span>' +
-
-              '<span class="project-caption">' +
-
-                '<span class="folder-project-number">' +
-                  pad(index + 1) +
-                '</span>' +
-
-                '<span class="folder-project-name">' +
-                  esc(project.title) +
-                '</span>' +
-
-                '<span class="folder-project-arrow" aria-hidden="true">' +
-                  '↗' +
-                '</span>' +
-
-              '</span>' +
-
-            '</a>'
-          );
-        }).join('');
-
-        return (
-          '<details class="archive-folder"' +
-            (groupIndex === 0 ? ' open' : '') +
-          '>' +
-
-            '<summary class="archive-folder-tab">' +
-
-              '<span class="folder-label">' +
-
-                '<span class="folder-number">' +
-                  pad(groupIndex + 1) +
-                '</span>' +
-
-                '<span class="folder-name">' +
-                  esc(group.name) +
-                '</span>' +
-
-              '</span>' +
-
-              '<span class="folder-count">' +
-                pad(group.projects.length) +
-              '</span>' +
-
-              '<span class="folder-icon" aria-hidden="true">' +
-                '+' +
-              '</span>' +
-
-            '</summary>' +
-
-            '<div class="folder-content">' +
-
-              '<div class="folder-section-heading">' +
-                '<span>habibah / ' + esc(group.name) + '</span>' +
-                '<span>' + pad(group.projects.length) + ' projects</span>' +
-              '</div>' +
-
-              '<div class="folder-projects">' +
-                projects +
-              '</div>' +
-
-            '</div>' +
-
-          '</details>'
-        );
-      }).join('');
-
-      return (
-        '<div class="archive-accordion">' +
-
-          '<div class="archive-file-header">' +
-
-            '<div class="archive-file-heading">' +
-              '<span class="archive-file-kicker">personal collection</span>' +
-              '<span class="archive-file-title-main">habibah / archive</span>' +
-              '<span class="archive-file-ar" lang="ar" dir="rtl">' +
-                'مَلَفّ الأَعْمَال' +
-              '</span>' +
-            '</div>' +
-
-            '<div class="archive-file-total">' +
-              '<span>' + pad(list.length) + '</span>' +
-              '<span>projects</span>' +
-            '</div>' +
-
-          '</div>' +
-
-          '<div class="archive-folder-stack">' +
-            sections +
-          '</div>' +
-
-          '<div class="archive-drawer-bottom">' +
-            '<span>visual archive / habibah</span>' +
-            '<span>' + pad(groups.length) + ' sections</span>' +
-          '</div>' +
-
-        '</div>'
-      );
-    }
-
-    /* ========================================
-       HOMEPAGE INTRO
-       ======================================== */
-
-    function hero() {
-      return (
-        '<section class="intro">' +
-
-          '<div class="intro-name">' +
-            '<h1 lang="ar" dir="rtl">حبيبه</h1>' +
-            '<p class="intro-title">visual creative</p>' +
-            '<span class="translation" lang="ar" dir="rtl">' +
-              'مُبْدِعَةٌ بَصَرِيَّةٌ' +
-            '</span>' +
-          '</div>' +
-
-          '<p class="intro-description">' +
-            esc(S.intro || S.tagline || '') +
-          '</p>' +
-
-        '</section>'
-      );
-    }
-
-    /* ========================================
-       BILINGUAL LABELS
-       ======================================== */
-
-    function tr(english, arabic) {
-      return (
-        '<span class="nav-label">' +
-          '<span class="nav-en">' + english + '</span>' +
-          '<span class="translation" lang="ar" dir="rtl">' +
-            arabic +
-          '</span>' +
-        '</span>'
-      );
-    }
-
-    function archiveHeading() {
-      return (
-        '<div class="archive-heading">' +
-
-          '<div>' +
-            '<h2>the archive</h2>' +
-            '<span class="translation" lang="ar" dir="rtl">' +
-              'مَلَفّ الأَقْسَام' +
-            '</span>' +
-          '</div>' +
-
-          '<p>a collection of visual experiments and projects</p>' +
-
-        '</div>'
-      );
-    }
-
-    /* ========================================
-       PAGE VIEWS
-       ======================================== */
-
-    var views = {
+    });
+
+    return Object.keys(seen).sort().map(function (key) {
+      return seen[key];
+    });
+  }
+
+  function views() {
+    return {
       home: function () {
-        return (
-          hero() +
-
+        return hero() +
           '<section class="archive-section">' +
-            archiveHeading() +
-            lib(items()) +
-
-            '<p class="archive-more">' +
-              '<a href="#/work">' +
-                tr('view all work', 'عَرْضُ كُلِّ الْأَعْمَالِ') +
-              '</a>' +
-            '</p>' +
-
-          '</section>'
-        );
+          archiveHeading() +
+          '<div class="archive-content">' + lib(items('all')) + '</div>' +
+          '<div class="archive-more"><a href="#/work">view all work ↗</a></div>' +
+          '</section>';
       },
 
       work: function () {
-        var categories = ['All'];
+        var buttons =
+          '<button type="button" data-filter="all" aria-pressed="' +
+          (currentFilter === 'all' ? 'true' : 'false') +
+          '">all work</button>';
 
-        (S.categories || []).forEach(function (category) {
-          if (
-            typeof category === 'string' &&
-            !categories.some(function (existing) {
-              return existing.toLowerCase() === category.toLowerCase();
-            })
-          ) {
-            categories.push(category);
-          }
-        });
+        buttons += categories().map(function (c) {
+          return '<button type="button" data-filter="' + esc(c) +
+            '" aria-pressed="' +
+            (currentFilter.toLowerCase() === c.toLowerCase() ? 'true' : 'false') +
+            '">' + esc(c) + '</button>';
+        }).join('');
 
-        return (
-          '<section class="archive-section">' +
-
-            archiveHeading() +
-
-            '<div class="filters" role="group" aria-label="Filter by category">' +
-
-              categories.map(function (category) {
-                return (
-                  '<button type="button" aria-pressed="' +
-                    (category === 'All' ? 'true' : 'false') +
-                    '" data-c="' + esc(category) + '">' +
-                    esc(category) +
-                  '</button>'
-                );
-              }).join('') +
-
-            '</div>' +
-
-            '<div id="g">' + lib(items()) + '</div>' +
-
-          '</section>'
-        );
+        return '<section class="archive-section work-page">' +
+          archiveHeading() +
+          '<div class="filters" aria-label="filter projects">' + buttons + '</div>' +
+          '<div id="project-ring-results">' + lib(items(currentFilter)) + '</div>' +
+          '</section>';
       },
 
       about: function () {
-        return (
-          '<section class="about">' +
-
-            '<h1>about</h1>' +
-
-            '<span class="translation" lang="ar" dir="rtl">' +
-              'مَنْ أَنَا' +
-            '</span>' +
-
-            '<div class="txt">' +
-              paras(S.about) +
-            '</div>' +
-
-          '</section>'
-        );
+        return '<section class="about">' +
+          '<h1>about</h1>' +
+          '<span class="translation" lang="ar" dir="rtl">مَنْ أَنَا</span>' +
+          '<div class="txt">' +
+          paragraphs(S.about || S.bio || S.aboutText ||
+            'i am a visual creative exploring design, characters, stories, and visual culture.') +
+          '</div></section>';
       },
 
       contact: function () {
-        var links = [];
+        var c = S.contact || {};
+        var links = Array.isArray(c) ? c : (c.links || S.links || []);
 
-        if (S.email) {
-          links.push(
-            '<a href="mailto:' + esc(S.email) + '">' +
-              esc(S.email) +
-            '</a>'
-          );
+        var html = '<section class="links"><div>' +
+          '<h1>contact</h1>' +
+          '<span class="translation" lang="ar" dir="rtl">تَوَاصُل</span>' +
+          '</div>';
+
+        if (typeof c === 'string') {
+          html += paragraphs(c);
         }
 
-        (S.links || []).forEach(function (link) {
-          if (!link || !link.url || !link.label) {
-            return;
-          }
+        if (Array.isArray(links)) {
+          html += links.map(function (link) {
+            if (typeof link === 'string') {
+              return '<a href="' + esc(link) +
+                '" target="_blank" rel="noreferrer">' +
+                esc(link.replace(/^https?:\/\//, '')) + ' ↗</a>';
+            }
 
-          links.push(
-            '<a href="' + esc(link.url) +
-              '" target="_blank" rel="noopener noreferrer">' +
-              esc(link.label) +
-            '</a>'
-          );
-        });
+            var label = link.label || link.name || link.title || link.url || link.href || 'link';
+            var href = link.url || link.href || (link.email ? 'mailto:' + link.email : '#');
 
-        return (
-          '<section class="links">' +
+            return '<a href="' + esc(href) + '"' +
+              (/^https?:/.test(href) ? ' target="_blank" rel="noreferrer"' : '') +
+              '>' + esc(label) + ' ↗</a>';
+          }).join('');
+        }
 
-            '<div>' +
-              '<h1>contact</h1>' +
-              '<span class="translation" lang="ar" dir="rtl">' +
-                'تَوَاصُل' +
-              '</span>' +
-            '</div>' +
+        if (!links.length && typeof c !== 'string') {
+          html += '<a href="mailto:ihabibahhamdi@gmail.com">email ↗</a>';
+        }
 
-            links.join('') +
-
-          '</section>'
-        );
+        return html + '</section>';
       }
     };
+  }
 
-    /* ========================================
-       PROJECT DETAILS
-       ======================================== */
-
-    function project(id) {
-      var match = String(id || '').match(/^(\d+)-/);
-      var index = match ? parseInt(match[1], 10) - 1 : -1;
-      var current = P[index];
-
+  function findProject(id) {
+    for (var i = 0; i < P.length; i++) {
       if (
-        !current ||
-        pid(current, index) !== String(id)
+        pid(P[i], i) === id ||
+        String(P[i].id || '') === id ||
+        slug(P[i].title || P[i].name) === id ||
+        String(i) === id
       ) {
-        return (
-          '<p class="txt">' +
-            'Project not found. ' +
-            '<a href="#/work">Back to work</a>' +
-          '</p>'
-        );
-      }
-
-      var imageCount = Math.max(
-        (current.images || []).length,
-        4
-      );
-
-      var gallery = '';
-      var captions = '';
-
-      var description = String(current.description || '')
-        .split(/\n\s*\n/);
-
-      for (var j = 0; j < imageCount; j++) {
-        gallery += (
-          '<figure class="sq" tabindex="0" role="button" ' +
-            'aria-label="View image ' + (j + 1) + ' larger">' +
-
-            '<span class="num">' +
-              circ(j + 1) +
-            '</span>' +
-
-            '<div class="art">' +
-              art(current, index, j) +
-            '</div>' +
-
-          '</figure>'
-        );
-
-        var caption = cap(current, j);
-
-        if (caption) {
-          captions += (
-            '<li>' +
-              '<span>' + circ(j + 1) + '</span>' +
-              esc(caption) +
-            '</li>'
-          );
-        }
-      }
-
-      return (
-        '<div class="pj">' +
-
-          '<div class="sqs">' +
-            gallery +
-          '</div>' +
-
-          '<aside>' +
-
-            '<a href="#/work">back to work</a>' +
-
-            '<span class="translation" lang="ar" dir="rtl">' +
-              'الْعَوْدَةُ إِلَى الْأَعْمَالِ' +
-            '</span>' +
-
-            '<h1>' + esc(current.title) + '</h1>' +
-
-            '<hr>' +
-
-            '<p class="it">' +
-              esc(description[0]) +
-            '</p>' +
-
-            (captions
-              ? '<ul class="cl">' + captions + '</ul>'
-              : '') +
-
-            '<h3>details</h3>' +
-
-            '<span class="translation" lang="ar" dir="rtl">' +
-              'التَّفَاصِيل' +
-            '</span>' +
-
-            '<p class="meta">' +
-              esc(getCategory(current)) +
-              (current.year ? ', ' + esc(current.year) : '') +
-            '</p>' +
-
-            paras(description.slice(1).join('\n\n')) +
-
-            (current.role
-              ? '<h3>my role</h3>' +
-                '<span class="translation" lang="ar" dir="rtl">' +
-                  'دَوْرِي' +
-                '</span>' +
-                '<p>' + esc(current.role) + '</p>'
-              : '') +
-
-            (current.process
-              ? '<h3>process</h3>' +
-                '<span class="translation" lang="ar" dir="rtl">' +
-                  'مَرَاحِلُ الْعَمَلِ' +
-                '</span>' +
-                paras(current.process)
-              : '') +
-
-          '</aside>' +
-
-        '</div>'
-      );
-    }
-
-    /* ========================================
-       NAVIGATION
-       ======================================== */
-
-    function route() {
-      if (!app || !S) {
-        return;
-      }
-
-      var hash = location.hash
-        .replace(/^#\/?/, '')
-        .split('/');
-
-      var page = hash[0] || 'home';
-
-      if (!Object.prototype.hasOwnProperty.call(views, page)) {
-        page = 'home';
-      }
-
-      if (page === 'work' && hash[1]) {
-        app.innerHTML = project(hash[1]);
-      } else {
-        app.innerHTML = views[page]();
-      }
-
-      document.title = (
-        page === 'home' ? '' : page + ' | '
-      ) + 'habibah';
-
-      window.scrollTo(0, 0);
-
-      document.querySelectorAll('header nav a').forEach(function (link) {
-        var href = link.getAttribute('href');
-
-        if (href === '#/' + page) {
-          link.setAttribute('aria-current', 'page');
-        } else {
-          link.removeAttribute('aria-current');
-        }
-      });
-    }
-
-    /* ========================================
-       IMAGE VIEWER
-       ======================================== */
-
-    function openImage(element) {
-      var artwork = element.querySelector('.art');
-
-      if (!artwork || !lb || !lbc) {
-        return;
-      }
-
-      lbc.replaceChildren();
-
-      Array.from(artwork.childNodes).forEach(function (node) {
-        lbc.appendChild(node.cloneNode(true));
-      });
-
-      var image = lbc.querySelector('img');
-
-      if (image) {
-        image.loading = 'eager';
-        image.removeAttribute('onerror');
-        image.onerror = function () {
-          image.alt = 'Image unavailable';
-        };
-      }
-
-      if (typeof lb.showModal === 'function') {
-        if (!lb.open) {
-          lb.showModal();
-        }
-      } else {
-        lb.setAttribute('open', '');
+        return [P[i], i];
       }
     }
 
-    function closeImage() {
-      if (!lb) {
-        return;
-      }
+    return null;
+  }
 
-      if (typeof lb.close === 'function' && lb.open) {
-        lb.close();
-      } else {
-        lb.removeAttribute('open');
-      }
+  function project(id) {
+    var found = findProject(id);
+
+    if (!found) {
+      return '<section class="about"><h1>project not found</h1>' +
+        '<a href="#/work">← back to work</a></section>';
     }
 
-    /* ========================================
-       CLICK EVENTS
-       ======================================== */
+    var p = found[0];
+    var i = found[1];
+    var images = projectImages(p);
+    var title = p.title || p.name || 'untitled project';
 
-    document.addEventListener('click', function (event) {
-      var target = event.target;
+    var gallery = images.map(function (image, n) {
+      return '<button class="sq" type="button" data-lightbox-index="' + n +
+        '" aria-label="view image ' + (n + 1) + '">' +
+        '<span class="num">' + pad(n + 1) + '</span>' +
+        '<span class="art">' + art(p, n) + '</span>' +
+        '</button>';
+    }).join('');
 
-      if (!target || typeof target.closest !== 'function') {
-        return;
-      }
+    var aside = '<aside><a href="#/work">← back to archive</a>' +
+      '<span class="translation" lang="ar" dir="rtl">أَرْشِيفُ الْأَعْمَالِ</span>' +
+      '<p class="project-code">' + esc(codeNumber(i + 1)) +
+      ' / ' + esc(p.category || 'project') + '</p>' +
+      '<h1>' + esc(title) + '</h1>' +
+      '<div class="it">' +
+      paragraphs(p.description || p.about || p.text || p.summary || '') +
+      '</div>';
 
-      var filter = target.closest('button[data-c]');
-      var image = target.closest('.sq');
+    var meta = [];
 
-      if (filter) {
-        var selectedCategory = filter.getAttribute('data-c');
-        var filterGroup = filter.parentNode;
-
-        Array.from(filterGroup.children).forEach(function (button) {
-          if (button.matches('button[data-c]')) {
-            button.setAttribute(
-              'aria-pressed',
-              button === filter ? 'true' : 'false'
-            );
-          }
-        });
-
-        var grid = document.getElementById('g');
-
-        if (grid) {
-          grid.innerHTML = lib(items(selectedCategory));
-        }
-
-        return;
-      }
-
-      if (image) {
-        event.preventDefault();
-        openImage(image);
-        return;
-      }
-
-      if (
-        target.id === 'lbx' ||
-        target === lb
-      ) {
-        closeImage();
+    ['year', 'client', 'role', 'tools', 'medium'].forEach(function (key) {
+      if (p[key]) {
+        meta.push('<li><span>' + esc(key) + '</span><span>' +
+          esc(Array.isArray(p[key]) ? p[key].join(', ') : p[key]) +
+          '</span></li>');
       }
     });
 
-    /* ========================================
-       KEYBOARD ACCESSIBILITY
-       ======================================== */
-
-    document.addEventListener('keydown', function (event) {
-      var target = event.target;
-
-      if (!target || typeof target.closest !== 'function') {
-        return;
-      }
-
-      var image = target.closest('.sq');
-
-      if (
-        image &&
-        (event.key === 'Enter' || event.key === ' ')
-      ) {
-        event.preventDefault();
-        openImage(image);
-      }
-
-      if (event.key === 'Escape' && lb && lb.open) {
-        closeImage();
-      }
-    });
-
-    /* ========================================
-       LOAD JSON DATA
-       ======================================== */
-
-    function load(url) {
-      return fetch(url, {
-        cache: 'no-cache'
-      }).then(function (response) {
-        if (!response.ok) {
-          throw new Error(
-            'Failed to load ' + url +
-            ' (HTTP ' + response.status + ')'
-          );
-        }
-
-        return response.json().catch(function () {
-          throw new Error(
-            'Invalid JSON in ' + url +
-            '. Check the file syntax.'
-          );
-        });
-      });
+    if (meta.length) {
+      aside += '<h3>project notes</h3><ul class="cl">' + meta.join('') + '</ul>';
     }
 
-    function showLoadError(error) {
-      console.error('[Habibah Portfolio]', error);
+    return '<section class="pj"><div class="sqs">' +
+      (gallery || '<div class="sq"><span class="art">' + art(p, 0) + '</span></div>') +
+      '</div>' + aside + '</aside></section>';
+  }
 
-      if (!app) {
-        return;
-      }
+  function renderFooter() {
+    foot.innerHTML =
+      '<div class="bar">' +
+      '<a class="big" href="#/">habibah</a>' +
+      '<a class="nav-label" href="#/work">work<span class="translation" lang="ar" dir="rtl">الأَعْمَال</span></a>' +
+      '<a class="nav-label" href="#/about">about<span class="translation" lang="ar" dir="rtl">مَنْ أَنَا</span></a>' +
+      '<a class="nav-label" href="#/contact">contact<span class="translation" lang="ar" dir="rtl">تَوَاصُل</span></a>' +
+      '</div>';
+  }
 
-      app.innerHTML = (
-        '<section class="about">' +
-          '<h1>Unable to load portfolio</h1>' +
-          '<p class="txt">' +
-            'The portfolio data could not be loaded. ' +
-            'Please check the JSON files and try again.' +
-          '</p>' +
-        '</section>'
-      );
+  /* =========================================
+     3D ARCHIVE RING
+     Mouse movement rotates the ring.
+     Touch swipe works on mobile.
+     ========================================= */
+
+  function setupArchiveRing() {
+    if (ringCleanup) {
+      ringCleanup();
+      ringCleanup = null;
     }
 
-    if (!app) {
-      console.error(
-        '[Habibah Portfolio] Missing #app element in index.html.'
-      );
+    if (ringFrame) {
+      cancelAnimationFrame(ringFrame);
+      ringFrame = 0;
+    }
+
+    var scene = document.querySelector('.ring-scene');
+    var ring = scene && scene.querySelector('.archive-ring');
+
+    if (!scene || !ring) {
       return;
     }
 
-    Promise.all([
-      load('data/site.json'),
-      load('data/projects.json')
-    ])
-      .then(function (results) {
-        S = results[0] || {};
+    var cards = Array.prototype.slice.call(ring.children);
+    var count = cards.length;
 
-        var projectData = results[1];
+    if (!count) {
+      return;
+    }
 
-        if (Array.isArray(projectData)) {
-          P = projectData;
-        } else if (
-          projectData &&
-          Array.isArray(projectData.projects)
-        ) {
-          P = projectData.projects;
-        } else {
-          throw new Error(
-            'data/projects.json must contain an array ' +
-            'or an object with a projects array.'
-          );
+    var rotation = 0;
+    var target = 0;
+    var velocity = 0;
+    var lastMouseX = null;
+    var dragging = false;
+    var moved = false;
+    var startX = 0;
+    var lastX = 0;
+    var pointerId = null;
+    var suppressClick = false;
+    var suppressTimer = null;
+    var destroyed = false;
+
+    var reduced = window.matchMedia &&
+      window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    function render() {
+      ring.style.transform =
+        'rotateX(-7deg) rotateY(' + rotation + 'deg)';
+    }
+
+    function arrange() {
+      var mobile = window.innerWidth <= 560;
+      var width = mobile ? 132 : 190;
+
+      var radius = count === 1
+        ? 0
+        : count === 2
+          ? width * 0.9
+          : Math.max(
+              mobile ? 210 : 255,
+              Math.min(
+                520,
+                width / (2 * Math.tan(Math.PI / count))
+              )
+            );
+
+      cards.forEach(function (card, index) {
+        card.style.transform =
+          'translate(-50%, -50%) rotateY(' +
+          (index * 360 / count) +
+          'deg) translateZ(' + radius + 'px)';
+      });
+
+      render();
+    }
+
+    function tick() {
+      ringFrame = 0;
+
+      if (destroyed) {
+        return;
+      }
+
+      if (reduced) {
+        rotation = target;
+        velocity = 0;
+        render();
+        return;
+      }
+
+      var difference = target - rotation;
+
+      velocity += difference * 0.075;
+      velocity *= 0.78;
+      rotation += velocity;
+
+      if (
+        Math.abs(difference) < 0.025 &&
+        Math.abs(velocity) < 0.025
+      ) {
+        rotation = target;
+        velocity = 0;
+        render();
+        return;
+      }
+
+      render();
+      ringFrame = requestAnimationFrame(tick);
+    }
+
+    function animate() {
+      if (destroyed) {
+        return;
+      }
+
+      if (reduced) {
+        rotation = target;
+        velocity = 0;
+        render();
+      } else if (!ringFrame) {
+        ringFrame = requestAnimationFrame(tick);
+      }
+    }
+
+    /* Desktop: move the mouse horizontally over the archive. */
+    function onMouseMove(event) {
+      if (
+        event.pointerType === 'touch' ||
+        dragging ||
+        window.innerWidth <= 560
+      ) {
+        return;
+      }
+
+      if (lastMouseX === null) {
+        lastMouseX = event.clientX;
+        return;
+      }
+
+      var delta = event.clientX - lastMouseX;
+      lastMouseX = event.clientX;
+
+      if (Math.abs(delta) > 90 || delta === 0) {
+        return;
+      }
+
+      target += delta * 0.42;
+      animate();
+    }
+
+    function onMouseLeave() {
+      lastMouseX = null;
+    }
+
+    /* Mobile: swipe left or right to rotate the archive. */
+    function onPointerDown(event) {
+      if (event.pointerType === 'mouse') {
+        return;
+      }
+
+      if (event.button !== undefined && event.button !== 0) {
+        return;
+      }
+
+      dragging = true;
+      moved = false;
+      startX = lastX = event.clientX;
+      pointerId = event.pointerId;
+
+      scene.classList.add('is-dragging');
+
+      if (scene.setPointerCapture) {
+        try {
+          scene.setPointerCapture(pointerId);
+        } catch (error) {
+          /* Pointer capture is optional. */
+        }
+      }
+    }
+
+    function onTouchMove(event) {
+      if (
+        event.pointerType === 'mouse' ||
+        !dragging ||
+        event.pointerId !== pointerId
+      ) {
+        return;
+      }
+
+      var delta = event.clientX - lastX;
+
+      if (Math.abs(event.clientX - startX) > 6) {
+        moved = true;
+      }
+
+      if (moved) {
+        target += delta * 0.5;
+        animate();
+      }
+
+      lastX = event.clientX;
+    }
+
+    function onPointerUp(event) {
+      if (
+        !dragging ||
+        (event.pointerId != null && event.pointerId !== pointerId)
+      ) {
+        return;
+      }
+
+      dragging = false;
+      scene.classList.remove('is-dragging');
+
+      if (moved) {
+        suppressClick = true;
+
+        if (suppressTimer) {
+          window.clearTimeout(suppressTimer);
         }
 
-        if (!S || typeof S !== 'object') {
-          throw new Error(
-            'data/site.json must contain a valid JSON object.'
-          );
-        }
+        suppressTimer = window.setTimeout(function () {
+          suppressClick = false;
+          suppressTimer = null;
+        }, 250);
+      }
 
-        /* FOOTER */
+      pointerId = null;
+      lastMouseX = null;
+    }
 
-        if (foot) {
-          foot.innerHTML = (
-            '<div class="bar">' +
+    function onClick(event) {
+      if (!suppressClick) {
+        return;
+      }
 
-              '<div class="big">habibah</div>' +
+      event.preventDefault();
+      event.stopPropagation();
+      suppressClick = false;
 
-              '<a href="#/">' +
-                tr('home', 'الرَّئِيسِيَّة') +
-              '</a>' +
+      if (suppressTimer) {
+        window.clearTimeout(suppressTimer);
+        suppressTimer = null;
+      }
+    }
 
-              '<a href="#/work">' +
-                tr('work', 'الْأَعْمَال') +
-              '</a>' +
+    function onResize() {
+      lastMouseX = null;
+      arrange();
+    }
 
-              '<a href="#/about">' +
-                tr('about', 'مَنْ أَنَا') +
-              '</a>' +
+    scene.addEventListener('pointermove', onMouseMove);
+    scene.addEventListener('pointerleave', onMouseLeave);
+    scene.addEventListener('pointerdown', onPointerDown);
+    scene.addEventListener('pointermove', onTouchMove);
+    scene.addEventListener('pointerup', onPointerUp);
+    scene.addEventListener('pointercancel', onPointerUp);
+    scene.addEventListener('click', onClick, true);
 
-              '<a href="#/contact">' +
-                tr('contact', 'تَوَاصُل') +
-              '</a>' +
+    window.addEventListener('resize', onResize, { passive: true });
 
-            '</div>'
-          );
-        }
+    arrange();
 
-        window.removeEventListener('hashchange', route);
-        window.addEventListener('hashchange', route);
+    ringCleanup = function () {
+      destroyed = true;
 
-        route();
-      })
-      .catch(showLoadError);
+      scene.removeEventListener('pointermove', onMouseMove);
+      scene.removeEventListener('pointerleave', onMouseLeave);
+      scene.removeEventListener('pointerdown', onPointerDown);
+      scene.removeEventListener('pointermove', onTouchMove);
+      scene.removeEventListener('pointerup', onPointerUp);
+      scene.removeEventListener('pointercancel', onPointerUp);
+      scene.removeEventListener('click', onClick, true);
+
+      window.removeEventListener('resize', onResize);
+
+      if (suppressTimer) {
+        window.clearTimeout(suppressTimer);
+      }
+
+      if (ringFrame) {
+        cancelAnimationFrame(ringFrame);
+      }
+
+      ringFrame = 0;
+    };
   }
 
-  /* ========================================
-     WAIT FOR THE HTML TO BE READY
-     ======================================== */
+  /* =========================================
+     ROUTING
+     ========================================= */
 
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', init, {
-      once: true
+  function route() {
+    var parts = window.location.hash
+      .replace(/^#\/?/, '')
+      .split('/')
+      .filter(Boolean);
+
+    var page = parts[0] || 'home';
+    var id = parts[1];
+    var title = 'habibah — visual creative';
+
+    if (page === 'work' && id) {
+      app.innerHTML = project(id);
+
+      var found = findProject(id);
+
+      if (found) {
+        title = (found[0].title || found[0].name || 'project') + ' — habibah';
+      }
+
+      if (ringCleanup) {
+        ringCleanup();
+        ringCleanup = null;
+      }
+    } else {
+      var allViews = views();
+
+      if (!allViews[page]) {
+        page = 'home';
+      }
+
+      app.innerHTML = allViews[page]();
+
+      if (page === 'about') {
+        title = 'about — habibah';
+      }
+
+      if (page === 'contact') {
+        title = 'contact — habibah';
+      }
+
+      setupArchiveRing();
+    }
+
+    document.title = title;
+
+    document.querySelectorAll('.main-nav a').forEach(function (link) {
+      var target = link.getAttribute('href')
+        .replace(/^#\/?/, '')
+        .split('/')[0];
+
+      if (target === page) {
+        link.setAttribute('aria-current', 'page');
+      } else {
+        link.removeAttribute('aria-current');
+      }
     });
-  } else {
-    init();
+
+    window.scrollTo(0, 0);
   }
 
+  /* =========================================
+     FILTERS AND PROJECT LIGHTBOX
+     ========================================= */
+
+  document.addEventListener('click', function (event) {
+    var filter = event.target.closest('[data-filter]');
+
+    if (filter) {
+      currentFilter = filter.getAttribute('data-filter') || 'all';
+
+      document.querySelectorAll('[data-filter]').forEach(function (button) {
+        button.setAttribute(
+          'aria-pressed',
+          button.getAttribute('data-filter').toLowerCase() ===
+            currentFilter.toLowerCase()
+            ? 'true'
+            : 'false'
+        );
+      });
+
+      var results = document.getElementById('project-ring-results');
+
+      if (results) {
+        results.innerHTML = lib(items(currentFilter));
+        setupArchiveRing();
+      }
+
+      return;
+    }
+
+    var imageButton = event.target.closest('[data-lightbox-index]');
+
+    if (imageButton) {
+      var id = window.location.hash
+        .replace(/^#\/?/, '')
+        .split('/')[1];
+
+      var found = findProject(id);
+
+      if (found) {
+        openImage(
+          found[0],
+          Number(imageButton.getAttribute('data-lightbox-index'))
+        );
+      }
+    }
+  });
+
+  function openImage(project, index) {
+    lbc.innerHTML = art(project, index);
+
+    var image = lbc.querySelector('img');
+
+    if (image) {
+      image.removeAttribute('loading');
+    }
+
+    if (typeof lb.showModal === 'function') {
+      lb.showModal();
+    } else {
+      lb.setAttribute('open', '');
+    }
+  }
+
+  function closeImage() {
+    if (lb.open) {
+      lb.close();
+    } else {
+      lb.removeAttribute('open');
+    }
+  }
+
+  document.getElementById('lbx').addEventListener('click', closeImage);
+
+  lb.addEventListener('click', function (event) {
+    if (event.target === lb) {
+      closeImage();
+    }
+  });
+
+  /* =========================================
+     LOAD SITE CONTENT
+     ========================================= */
+
+  function loadJSON(url) {
+    return fetch(url, { cache: 'no-cache' }).then(function (response) {
+      if (!response.ok) {
+        throw new Error('Could not load ' + url);
+      }
+
+      return response.json();
+    });
+  }
+
+  Promise.all([
+    loadJSON('data/site.json').catch(function () {
+      return {};
+    }),
+    loadJSON('data/projects.json').catch(function () {
+      return [];
+    })
+  ]).then(function (data) {
+    S = data[0] && typeof data[0] === 'object' ? data[0] : {};
+
+    var projects = data[1];
+
+    P = Array.isArray(projects)
+      ? projects
+      : (projects && Array.isArray(projects.projects)
+          ? projects.projects
+          : []);
+
+    renderFooter();
+    route();
+  }).catch(function () {
+    app.innerHTML =
+      '<section class="about">' +
+      '<h1>something went wrong</h1>' +
+      '<p>please check data/site.json and data/projects.json.</p>' +
+      '</section>';
+
+    renderFooter();
+  });
+
+  window.addEventListener('hashchange', route);
 })();
