@@ -1420,3 +1420,82 @@ dialog#lb::backdrop {
     transition: none !important;
   }
 }
+/* HABIBAH — ISOMETRIC ARCHIVE EXPERIMENT */
+
+@media (min-width: 851px) {
+  .archive-drawer {
+    overflow: hidden;
+    padding: 24px;
+    background: #fff;
+    box-shadow: none;
+  }
+
+  .archive-files {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 10px;
+    padding: 70px 30px;
+    min-height: 380px;
+    overflow: visible;
+    perspective: 1200px;
+  }
+
+  .archive-file,
+  .archive-file + .archive-file {
+    flex: 0 0 150px;
+    width: 150px;
+    min-height: 210px;
+    margin: 0;
+    transform: rotate(-25deg) skewY(8deg);
+    transform-origin: center;
+    transition:
+      transform .3s ease,
+      box-shadow .3s ease;
+  }
+
+  .archive-file-tab {
+    min-width: 0;
+    max-width: 90%;
+    margin-left: 6px;
+    font-size: 8px;
+  }
+
+  .archive-file-body {
+    min-height: 175px;
+    padding: 8px;
+  }
+
+  .archive-file-preview {
+    height: 95px;
+  }
+
+  .archive-file-info {
+    margin-top: 8px;
+    padding-right: 15px;
+    font-size: 9px;
+  }
+
+  .archive-file-info .archive-file-title {
+    font-size: 10px;
+  }
+
+  .archive-file-number {
+    font-size: 8px;
+  }
+
+  .archive-file-arrow {
+    right: 6px;
+    bottom: 7px;
+    font-size: 12px;
+  }
+
+  .archive-file:hover {
+    z-index: 100;
+    transform: translateY(-10px) rotate(-25deg)
+      skewY(8deg) scale(1.04);
+    box-shadow: 4px 8px 0 rgba(0, 0, 0, .12);
+  }
+}
+
