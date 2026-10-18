@@ -148,6 +148,7 @@
       '</div><p>a collection of visual experiments and projects</p></div>';
   }
 
+  /* PROJECT GALLERY — WITHOUT THE HEADER ABOVE THE RING */
   function lib(list) {
     if (!list.length) {
       return '<p class="txt empty-state">no projects in this category yet.</p>';
@@ -165,23 +166,22 @@
         '<span class="ring-card-art">' + art(p, 0) + '</span>' +
         '<span class="ring-card-caption">' +
         '<span class="ring-card-number">' + esc(codeNumber(i + 1)) + '</span>' +
-        '<span class="ring-card-title">' + esc(p.title || p.name || 'untitled project') + '</span>' +
-        '<span class="ring-card-category">' + esc(p.category || 'project') + '</span>' +
-        '</span><span class="ring-card-shine" aria-hidden="true"></span></a>';
+        '<span class="ring-card-title">' +
+        esc(p.title || p.name || 'untitled project') +
+        '</span>' +
+        '<span class="ring-card-category">' +
+        esc(p.category || 'project') +
+        '</span>' +
+        '</span>' +
+        '<span class="ring-card-shine" aria-hidden="true"></span>' +
+        '</a>';
     }).join('');
 
     return '<section class="ring-archive" aria-label="project archive">' +
-      '<div class="archive-file-header">' +
-      '<div class="archive-file-heading">' +
-      '<span class="archive-file-kicker">visual index / 2026</span>' +
-      '<span class="archive-file-title-main">habibah / archive</span>' +
-      '<span class="archive-file-ar" lang="ar" dir="rtl">أَرْشِيفُ الْأَعْمَالِ</span>' +
-      '</div><div class="archive-file-total">' +
-      '<span>' + pad(list.length) + '</span><span>projects</span>' +
-      '</div></div>' +
-      '<div class="ring-scene" aria-label="drag or scroll to rotate the 3D project archive">' +
-      '<div class="ring-stage"><div class="archive-ring">' + cards + '</div></div>' +
-      '</div></section>';
+      '<div class="ring-scene" aria-label="interactive 3D project gallery">' +
+      '<div class="ring-stage">' +
+      '<div class="archive-ring">' + cards + '</div>' +
+      '</div></div></section>';
   }
 
   function hero() {
